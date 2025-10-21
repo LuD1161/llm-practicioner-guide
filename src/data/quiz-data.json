@@ -1,0 +1,714 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is your primary use case?",
+      "multipleSelect": true,
+      "options": [
+        {
+          "id": "chat",
+          "label": "Conversational AI",
+          "icon": "MessageSquare",
+          "description": "Interactive chatbots and dialogue systems"
+        },
+        {
+          "id": "coding",
+          "label": "Code Generation",
+          "icon": "Code",
+          "description": "Writing and debugging code"
+        },
+        {
+          "id": "content",
+          "label": "Content Creation",
+          "icon": "FileText",
+          "description": "Writing articles, blogs, and creative content"
+        },
+        {
+          "id": "analysis",
+          "label": "Data Analysis",
+          "icon": "BarChart",
+          "description": "Analyzing and interpreting data"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "question": "What is your budget?",
+      "multipleSelect": false,
+      "options": [
+        {
+          "id": "free",
+          "label": "Free",
+          "icon": "Gift",
+          "description": "Open-source or free tier only"
+        },
+        {
+          "id": "low",
+          "label": "Low Cost",
+          "icon": "DollarSign",
+          "description": "Under $20/month"
+        },
+        {
+          "id": "medium",
+          "label": "Medium Cost",
+          "icon": "CreditCard",
+          "description": "$20-$100/month"
+        },
+        {
+          "id": "high",
+          "label": "Enterprise",
+          "icon": "Building",
+          "description": "No budget constraints"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "question": "How important is data privacy?",
+      "multipleSelect": false,
+      "options": [
+        {
+          "id": "critical",
+          "label": "Critical",
+          "icon": "ShieldCheck",
+          "description": "Must be on-premise or self-hosted"
+        },
+        {
+          "id": "important",
+          "label": "Important",
+          "icon": "Shield",
+          "description": "Prefer privacy-focused providers"
+        },
+        {
+          "id": "moderate",
+          "label": "Moderate",
+          "icon": "Lock",
+          "description": "Standard privacy measures acceptable"
+        },
+        {
+          "id": "flexible",
+          "label": "Flexible",
+          "icon": "Unlock",
+          "description": "Privacy not a major concern"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "question": "What performance level do you need?",
+      "multipleSelect": false,
+      "options": [
+        {
+          "id": "fastest",
+          "label": "Fastest",
+          "icon": "Zap",
+          "description": "Real-time responses critical"
+        },
+        {
+          "id": "fast",
+          "label": "Fast",
+          "icon": "Gauge",
+          "description": "Quick responses preferred"
+        },
+        {
+          "id": "balanced",
+          "label": "Balanced",
+          "icon": "Scale",
+          "description": "Quality over speed"
+        },
+        {
+          "id": "thorough",
+          "label": "Thorough",
+          "icon": "Target",
+          "description": "Response time not critical"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "question": "What model size preference?",
+      "multipleSelect": false,
+      "options": [
+        {
+          "id": "small",
+          "label": "Small",
+          "icon": "Smartphone",
+          "description": "Efficient, runs on consumer hardware"
+        },
+        {
+          "id": "medium",
+          "label": "Medium",
+          "icon": "Monitor",
+          "description": "Good balance of capability and efficiency"
+        },
+        {
+          "id": "large",
+          "label": "Large",
+          "icon": "Server",
+          "description": "Maximum capability, cloud-based"
+        },
+        {
+          "id": "any",
+          "label": "No Preference",
+          "icon": "Cpu",
+          "description": "Best for the task"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Do you need multimodal capabilities?",
+      "multipleSelect": true,
+      "options": [
+        {
+          "id": "yes-vision",
+          "label": "Vision",
+          "icon": "Eye",
+          "description": "Image understanding and analysis"
+        },
+        {
+          "id": "yes-audio",
+          "label": "Audio",
+          "icon": "Mic",
+          "description": "Speech and audio processing"
+        },
+        {
+          "id": "yes-both",
+          "label": "Multiple",
+          "icon": "Layers",
+          "description": "Vision, audio, and more"
+        },
+        {
+          "id": "no",
+          "label": "Text Only",
+          "icon": "Type",
+          "description": "Text-based interactions only"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "question": "What level of customization do you need?",
+      "multipleSelect": false,
+      "options": [
+        {
+          "id": "none",
+          "label": "Plug & Play",
+          "icon": "Play",
+          "description": "Ready to use out of the box"
+        },
+        {
+          "id": "basic",
+          "label": "Basic",
+          "icon": "Settings",
+          "description": "Some prompt customization"
+        },
+        {
+          "id": "advanced",
+          "label": "Advanced",
+          "icon": "Wrench",
+          "description": "Fine-tuning and custom training"
+        },
+        {
+          "id": "full",
+          "label": "Full Control",
+          "icon": "Terminal",
+          "description": "Complete model customization"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "question": "What is your technical expertise?",
+      "multipleSelect": false,
+      "options": [
+        {
+          "id": "beginner",
+          "label": "Beginner",
+          "icon": "BookOpen",
+          "description": "New to AI/ML"
+        },
+        {
+          "id": "intermediate",
+          "label": "Intermediate",
+          "icon": "GraduationCap",
+          "description": "Some programming experience"
+        },
+        {
+          "id": "advanced",
+          "label": "Advanced",
+          "icon": "Brain",
+          "description": "Experienced with ML/AI"
+        },
+        {
+          "id": "expert",
+          "label": "Expert",
+          "icon": "Award",
+          "description": "ML researcher or engineer"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Do you need API access?",
+      "multipleSelect": false,
+      "options": [
+        {
+          "id": "required",
+          "label": "Required",
+          "icon": "Webhook",
+          "description": "Must integrate with applications"
+        },
+        {
+          "id": "preferred",
+          "label": "Preferred",
+          "icon": "Link",
+          "description": "Nice to have"
+        },
+        {
+          "id": "optional",
+          "label": "Optional",
+          "icon": "Globe",
+          "description": "Web interface is fine"
+        },
+        {
+          "id": "no",
+          "label": "Not Needed",
+          "icon": "User",
+          "description": "Personal use only"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "question": "What language support do you need?",
+      "multipleSelect": true,
+      "options": [
+        {
+          "id": "english",
+          "label": "English Only",
+          "icon": "Languages",
+          "description": "English language support"
+        },
+        {
+          "id": "multilingual",
+          "label": "Multilingual",
+          "icon": "Globe2",
+          "description": "Multiple major languages"
+        },
+        {
+          "id": "specialized",
+          "label": "Specialized",
+          "icon": "BookMarked",
+          "description": "Specific language requirements"
+        },
+        {
+          "id": "universal",
+          "label": "Universal",
+          "icon": "Earth",
+          "description": "100+ languages"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "question": "What is your deployment preference?",
+      "multipleSelect": false,
+      "options": [
+        {
+          "id": "cloud",
+          "label": "Cloud",
+          "icon": "Cloud",
+          "description": "Fully managed cloud service"
+        },
+        {
+          "id": "hybrid",
+          "label": "Hybrid",
+          "icon": "CloudCog",
+          "description": "Mix of cloud and local"
+        },
+        {
+          "id": "local",
+          "label": "On-Premise",
+          "icon": "HardDrive",
+          "description": "Self-hosted infrastructure"
+        },
+        {
+          "id": "flexible",
+          "label": "Flexible",
+          "icon": "Shuffle",
+          "description": "Any deployment option"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "question": "What is your primary concern?",
+      "multipleSelect": true,
+      "options": [
+        {
+          "id": "accuracy",
+          "label": "Accuracy",
+          "icon": "CheckCircle",
+          "description": "Most accurate responses"
+        },
+        {
+          "id": "speed",
+          "label": "Speed",
+          "icon": "Timer",
+          "description": "Fastest response time"
+        },
+        {
+          "id": "cost",
+          "label": "Cost",
+          "icon": "PiggyBank",
+          "description": "Most cost-effective"
+        },
+        {
+          "id": "privacy",
+          "label": "Privacy",
+          "icon": "LockKeyhole",
+          "description": "Maximum data protection"
+        }
+      ]
+    }
+  ],
+  "llms": [
+    {
+      "id": "gpt-4",
+      "name": "GPT-4",
+      "provider": "OpenAI",
+      "description": "Most capable model with broad knowledge",
+      "strengths": ["Accuracy", "Reasoning", "Versatility"],
+      "scores": {
+        "chat": 10,
+        "coding": 9,
+        "content": 10,
+        "analysis": 9,
+        "free": 0,
+        "low": 0,
+        "medium": 7,
+        "high": 10,
+        "critical": 3,
+        "important": 5,
+        "moderate": 8,
+        "flexible": 10,
+        "fastest": 6,
+        "fast": 8,
+        "balanced": 10,
+        "thorough": 10,
+        "small": 0,
+        "medium": 0,
+        "large": 10,
+        "any": 10,
+        "yes-vision": 10,
+        "yes-audio": 7,
+        "yes-both": 9,
+        "no": 10,
+        "none": 10,
+        "basic": 10,
+        "advanced": 7,
+        "full": 3,
+        "beginner": 10,
+        "intermediate": 10,
+        "advanced": 9,
+        "expert": 8,
+        "required": 10,
+        "preferred": 10,
+        "optional": 10,
+        "english": 10,
+        "multilingual": 10,
+        "specialized": 7,
+        "universal": 8,
+        "cloud": 10,
+        "hybrid": 3,
+        "local": 0,
+        "flexible": 10,
+        "accuracy": 10,
+        "speed": 7,
+        "cost": 5,
+        "privacy": 5
+      }
+    },
+    {
+      "id": "claude-3-opus",
+      "name": "Claude 3 Opus",
+      "provider": "Anthropic",
+      "description": "Excellent reasoning and nuanced understanding",
+      "strengths": ["Analysis", "Writing", "Ethics"],
+      "scores": {
+        "chat": 10,
+        "coding": 9,
+        "content": 10,
+        "analysis": 10,
+        "free": 0,
+        "low": 0,
+        "medium": 7,
+        "high": 10,
+        "critical": 4,
+        "important": 6,
+        "moderate": 8,
+        "flexible": 10,
+        "fastest": 5,
+        "fast": 7,
+        "balanced": 10,
+        "thorough": 10,
+        "small": 0,
+        "medium": 0,
+        "large": 10,
+        "any": 10,
+        "yes-vision": 10,
+        "yes-audio": 0,
+        "yes-both": 5,
+        "no": 10,
+        "none": 10,
+        "basic": 10,
+        "advanced": 6,
+        "full": 2,
+        "beginner": 10,
+        "intermediate": 10,
+        "advanced": 9,
+        "expert": 8,
+        "required": 10,
+        "preferred": 10,
+        "optional": 10,
+        "english": 10,
+        "multilingual": 9,
+        "specialized": 7,
+        "universal": 7,
+        "cloud": 10,
+        "hybrid": 2,
+        "local": 0,
+        "flexible": 10,
+        "accuracy": 10,
+        "speed": 6,
+        "cost": 5,
+        "privacy": 6
+      }
+    },
+    {
+      "id": "llama-3-70b",
+      "name": "Llama 3 70B",
+      "provider": "Meta",
+      "description": "Open-source powerhouse with strong performance",
+      "strengths": ["Open-source", "Customizable", "Cost-effective"],
+      "scores": {
+        "chat": 8,
+        "coding": 8,
+        "content": 8,
+        "analysis": 8,
+        "free": 10,
+        "low": 10,
+        "medium": 10,
+        "high": 10,
+        "critical": 10,
+        "important": 10,
+        "moderate": 9,
+        "flexible": 8,
+        "fastest": 7,
+        "fast": 8,
+        "balanced": 9,
+        "thorough": 8,
+        "small": 0,
+        "medium": 5,
+        "large": 10,
+        "any": 9,
+        "yes-vision": 0,
+        "yes-audio": 0,
+        "yes-both": 0,
+        "no": 10,
+        "none": 5,
+        "basic": 8,
+        "advanced": 10,
+        "full": 10,
+        "beginner": 5,
+        "intermediate": 8,
+        "advanced": 10,
+        "expert": 10,
+        "required": 9,
+        "preferred": 10,
+        "optional": 10,
+        "english": 9,
+        "multilingual": 9,
+        "specialized": 7,
+        "universal": 7,
+        "cloud": 8,
+        "hybrid": 10,
+        "local": 10,
+        "flexible": 10,
+        "accuracy": 8,
+        "speed": 7,
+        "cost": 10,
+        "privacy": 10
+      }
+    },
+    {
+      "id": "gemini-pro",
+      "name": "Gemini Pro",
+      "provider": "Google",
+      "description": "Strong multimodal capabilities with Google integration",
+      "strengths": ["Multimodal", "Speed", "Integration"],
+      "scores": {
+        "chat": 9,
+        "coding": 8,
+        "content": 9,
+        "analysis": 9,
+        "free": 8,
+        "low": 10,
+        "medium": 10,
+        "high": 10,
+        "critical": 3,
+        "important": 5,
+        "moderate": 8,
+        "flexible": 10,
+        "fastest": 9,
+        "fast": 10,
+        "balanced": 9,
+        "thorough": 8,
+        "small": 0,
+        "medium": 0,
+        "large": 10,
+        "any": 10,
+        "yes-vision": 10,
+        "yes-audio": 8,
+        "yes-both": 10,
+        "no": 9,
+        "none": 10,
+        "basic": 10,
+        "advanced": 6,
+        "full": 2,
+        "beginner": 10,
+        "intermediate": 10,
+        "advanced": 8,
+        "expert": 7,
+        "required": 10,
+        "preferred": 10,
+        "optional": 10,
+        "english": 10,
+        "multilingual": 10,
+        "specialized": 8,
+        "universal": 9,
+        "cloud": 10,
+        "hybrid": 2,
+        "local": 0,
+        "flexible": 10,
+        "accuracy": 8,
+        "speed": 10,
+        "cost": 8,
+        "privacy": 5
+      }
+    },
+    {
+      "id": "mistral-large",
+      "name": "Mistral Large",
+      "provider": "Mistral AI",
+      "description": "European AI with strong privacy focus",
+      "strengths": ["Privacy", "European data laws", "Cost-effective"],
+      "scores": {
+        "chat": 8,
+        "coding": 8,
+        "content": 8,
+        "analysis": 8,
+        "free": 5,
+        "low": 8,
+        "medium": 10,
+        "high": 10,
+        "critical": 8,
+        "important": 10,
+        "moderate": 9,
+        "flexible": 7,
+        "fastest": 8,
+        "fast": 9,
+        "balanced": 9,
+        "thorough": 8,
+        "small": 0,
+        "medium": 7,
+        "large": 10,
+        "any": 9,
+        "yes-vision": 0,
+        "yes-audio": 0,
+        "yes-both": 0,
+        "no": 10,
+        "none": 8,
+        "basic": 9,
+        "advanced": 8,
+        "full": 5,
+        "beginner": 8,
+        "intermediate": 9,
+        "advanced": 9,
+        "expert": 8,
+        "required": 10,
+        "preferred": 10,
+        "optional": 10,
+        "english": 9,
+        "multilingual": 9,
+        "specialized": 8,
+        "universal": 7,
+        "cloud": 10,
+        "hybrid": 6,
+        "local": 3,
+        "flexible": 9,
+        "accuracy": 8,
+        "speed": 8,
+        "cost": 8,
+        "privacy": 10
+      }
+    },
+    {
+      "id": "gpt-3.5-turbo",
+      "name": "GPT-3.5 Turbo",
+      "provider": "OpenAI",
+      "description": "Fast and cost-effective for most tasks",
+      "strengths": ["Speed", "Cost", "Efficiency"],
+      "scores": {
+        "chat": 9,
+        "coding": 7,
+        "content": 8,
+        "analysis": 7,
+        "free": 5,
+        "low": 10,
+        "medium": 10,
+        "high": 10,
+        "critical": 3,
+        "important": 5,
+        "moderate": 8,
+        "flexible": 10,
+        "fastest": 10,
+        "fast": 10,
+        "balanced": 8,
+        "thorough": 6,
+        "small": 0,
+        "medium": 8,
+        "large": 7,
+        "any": 8,
+        "yes-vision": 0,
+        "yes-audio": 0,
+        "yes-both": 0,
+        "no": 10,
+        "none": 10,
+        "basic": 10,
+        "advanced": 5,
+        "full": 2,
+        "beginner": 10,
+        "intermediate": 10,
+        "advanced": 7,
+        "expert": 5,
+        "required": 10,
+        "preferred": 10,
+        "optional": 10,
+        "english": 10,
+        "multilingual": 9,
+        "specialized": 6,
+        "universal": 7,
+        "cloud": 10,
+        "hybrid": 2,
+        "local": 0,
+        "flexible": 10,
+        "accuracy": 7,
+        "speed": 10,
+        "cost": 10,
+        "privacy": 5
+      }
+    }
+  ]
+}

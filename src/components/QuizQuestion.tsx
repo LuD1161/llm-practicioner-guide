@@ -15,11 +15,11 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
   const isMultiple = question.multipleSelect;
   const selectedArray = Array.isArray(selectedOptions) ? selectedOptions : selectedOptions ? [selectedOptions] : [];
 
-  const isSelected = (optionId: string) => {
+  const isSelected = useCallback((optionId: string) => {
     return selectedArray.includes(optionId);
-  };
+  }, [selectedArray]);
 
-  const handleSelect = (optionId: string) => {
+  const handleSelect = useCallback((optionId: string) => {
     if (isMultiple) {
       const newSelection = isSelected(optionId)
         ? selectedArray.filter(id => id !== optionId)
@@ -28,7 +28,7 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
     } else {
       onSelectOption(optionId);
     }
-  };
+  }, [isMultiple, isSelected, selectedArray, onSelectOption]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent, optionId: string, index: number) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -41,7 +41,7 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
       e.preventDefault();
       setFocusedIndex((prev) => (prev - 1 + question.options.length) % question.options.length);
     }
-  }, [question.options.length]);
+  }, [question.options.length, handleSelect]);
 
   useEffect(() => {
     const focusedButton = document.querySelector(`[data-option-index="${focusedIndex}"]`) as HTMLElement;

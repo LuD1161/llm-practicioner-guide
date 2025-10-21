@@ -2,712 +2,389 @@
   "questions": [
     {
       "id": 1,
-      "question": "What is your primary use case?",
-      "multipleSelect": true,
+      "question": "Can the LLM provider train on your data?",
+      "multipleSelect": false,
       "options": [
         {
-          "id": "chat",
-          "label": "Conversational AI",
-          "icon": "MessageSquare",
-          "description": "Interactive chatbots and dialogue systems"
+          "id": "no-training-guaranteed",
+          "label": "Absolutely Not",
+          "icon": "ShieldX",
+          "description": "Zero data retention, no training allowed - contractually guaranteed"
         },
         {
-          "id": "coding",
-          "label": "Code Generation",
-          "icon": "Code",
-          "description": "Writing and debugging code"
+          "id": "no-training-opt-out",
+          "label": "Prefer Opt-Out",
+          "icon": "ShieldAlert",
+          "description": "Data not used for training by default or with opt-out option"
         },
         {
-          "id": "content",
-          "label": "Content Creation",
-          "icon": "FileText",
-          "description": "Writing articles, blogs, and creative content"
+          "id": "training-acceptable",
+          "label": "Acceptable",
+          "icon": "ShieldQuestion",
+          "description": "Can train on anonymized or aggregated data"
         },
         {
-          "id": "analysis",
-          "label": "Data Analysis",
-          "icon": "BarChart",
-          "description": "Analyzing and interpreting data"
+          "id": "training-no-concern",
+          "label": "Not a Concern",
+          "icon": "ShieldOff",
+          "description": "Fine if provider trains on my prompts/data"
         }
       ]
     },
     {
       "id": 2,
-      "question": "What is your budget?",
-      "multipleSelect": false,
+      "question": "What type of data will you be processing?",
+      "multipleSelect": true,
       "options": [
         {
-          "id": "free",
-          "label": "Free",
-          "icon": "Gift",
-          "description": "Open-source or free tier only"
+          "id": "data-public",
+          "label": "Public Data",
+          "icon": "Globe",
+          "description": "Publicly available information only"
         },
         {
-          "id": "low",
-          "label": "Low Cost",
-          "icon": "DollarSign",
-          "description": "Under $20/month"
+          "id": "data-personal",
+          "label": "Personal Data",
+          "icon": "UserCircle",
+          "description": "Names, emails, addresses, or PII"
         },
         {
-          "id": "medium",
-          "label": "Medium Cost",
-          "icon": "CreditCard",
-          "description": "$20-$100/month"
+          "id": "data-health",
+          "label": "Health Data",
+          "icon": "Heart",
+          "description": "Medical records, health information (PHI)"
         },
         {
-          "id": "high",
-          "label": "Enterprise",
-          "icon": "Building",
-          "description": "No budget constraints"
+          "id": "data-financial",
+          "label": "Financial Data",
+          "icon": "Wallet",
+          "description": "Payment info, banking, financial records"
         }
       ]
     },
     {
       "id": 3,
-      "question": "How important is data privacy?",
-      "multipleSelect": false,
+      "question": "What compliance certifications do you need?",
+      "multipleSelect": true,
       "options": [
         {
-          "id": "critical",
-          "label": "Critical",
-          "icon": "ShieldCheck",
-          "description": "Must be on-premise or self-hosted"
+          "id": "compliance-none",
+          "label": "None Required",
+          "icon": "CircleSlash",
+          "description": "No specific compliance requirements"
         },
         {
-          "id": "important",
-          "label": "Important",
-          "icon": "Shield",
-          "description": "Prefer privacy-focused providers"
+          "id": "compliance-gdpr",
+          "label": "GDPR",
+          "icon": "Scale",
+          "description": "European data protection compliance"
         },
         {
-          "id": "moderate",
-          "label": "Moderate",
-          "icon": "Lock",
-          "description": "Standard privacy measures acceptable"
+          "id": "compliance-hipaa",
+          "label": "HIPAA",
+          "icon": "Hospital",
+          "description": "Healthcare data protection (US)"
         },
         {
-          "id": "flexible",
-          "label": "Flexible",
-          "icon": "Unlock",
-          "description": "Privacy not a major concern"
+          "id": "compliance-soc2",
+          "label": "SOC 2",
+          "icon": "FileCheck",
+          "description": "Security and availability standards"
         }
       ]
     },
     {
       "id": 4,
-      "question": "What performance level do you need?",
+      "question": "What is your organization's risk tolerance?",
       "multipleSelect": false,
       "options": [
         {
-          "id": "fastest",
-          "label": "Fastest",
-          "icon": "Zap",
-          "description": "Real-time responses critical"
+          "id": "risk-zero",
+          "label": "Zero Tolerance",
+          "icon": "ShieldX",
+          "description": "Cannot risk any data exposure - must be on-premise/self-hosted"
         },
         {
-          "id": "fast",
-          "label": "Fast",
-          "icon": "Gauge",
-          "description": "Quick responses preferred"
+          "id": "risk-low",
+          "label": "Very Low",
+          "icon": "ShieldCheck",
+          "description": "Need strong guarantees and certifications"
         },
         {
-          "id": "balanced",
-          "label": "Balanced",
-          "icon": "Scale",
-          "description": "Quality over speed"
+          "id": "risk-moderate",
+          "label": "Moderate",
+          "icon": "Shield",
+          "description": "Reasonable security measures are acceptable"
         },
         {
-          "id": "thorough",
-          "label": "Thorough",
-          "icon": "Target",
-          "description": "Response time not critical"
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "question": "What model size preference?",
-      "multipleSelect": false,
-      "options": [
-        {
-          "id": "small",
-          "label": "Small",
-          "icon": "Smartphone",
-          "description": "Efficient, runs on consumer hardware"
-        },
-        {
-          "id": "medium",
-          "label": "Medium",
-          "icon": "Monitor",
-          "description": "Good balance of capability and efficiency"
-        },
-        {
-          "id": "large",
-          "label": "Large",
-          "icon": "Server",
-          "description": "Maximum capability, cloud-based"
-        },
-        {
-          "id": "any",
-          "label": "No Preference",
-          "icon": "Cpu",
-          "description": "Best for the task"
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "question": "Do you need multimodal capabilities?",
-      "multipleSelect": true,
-      "options": [
-        {
-          "id": "yes-vision",
-          "label": "Vision",
-          "icon": "Eye",
-          "description": "Image understanding and analysis"
-        },
-        {
-          "id": "yes-audio",
-          "label": "Audio",
-          "icon": "Mic",
-          "description": "Speech and audio processing"
-        },
-        {
-          "id": "yes-both",
-          "label": "Multiple",
-          "icon": "Layers",
-          "description": "Vision, audio, and more"
-        },
-        {
-          "id": "no",
-          "label": "Text Only",
-          "icon": "Type",
-          "description": "Text-based interactions only"
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "question": "What level of customization do you need?",
-      "multipleSelect": false,
-      "options": [
-        {
-          "id": "none",
-          "label": "Plug & Play",
-          "icon": "Play",
-          "description": "Ready to use out of the box"
-        },
-        {
-          "id": "basic",
-          "label": "Basic",
-          "icon": "Settings",
-          "description": "Some prompt customization"
-        },
-        {
-          "id": "advanced",
-          "label": "Advanced",
-          "icon": "Wrench",
-          "description": "Fine-tuning and custom training"
-        },
-        {
-          "id": "full",
-          "label": "Full Control",
-          "icon": "Terminal",
-          "description": "Complete model customization"
-        }
-      ]
-    },
-    {
-      "id": 8,
-      "question": "What is your technical expertise?",
-      "multipleSelect": false,
-      "options": [
-        {
-          "id": "beginner",
-          "label": "Beginner",
-          "icon": "BookOpen",
-          "description": "New to AI/ML"
-        },
-        {
-          "id": "intermediate",
-          "label": "Intermediate",
-          "icon": "GraduationCap",
-          "description": "Some programming experience"
-        },
-        {
-          "id": "advanced",
-          "label": "Advanced",
-          "icon": "Brain",
-          "description": "Experienced with ML/AI"
-        },
-        {
-          "id": "expert",
-          "label": "Expert",
-          "icon": "Award",
-          "description": "ML researcher or engineer"
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "question": "Do you need API access?",
-      "multipleSelect": false,
-      "options": [
-        {
-          "id": "required",
-          "label": "Required",
-          "icon": "Webhook",
-          "description": "Must integrate with applications"
-        },
-        {
-          "id": "preferred",
-          "label": "Preferred",
-          "icon": "Link",
-          "description": "Nice to have"
-        },
-        {
-          "id": "optional",
-          "label": "Optional",
-          "icon": "Globe",
-          "description": "Web interface is fine"
-        },
-        {
-          "id": "no",
-          "label": "Not Needed",
-          "icon": "User",
-          "description": "Personal use only"
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "question": "What language support do you need?",
-      "multipleSelect": true,
-      "options": [
-        {
-          "id": "english",
-          "label": "English Only",
-          "icon": "Languages",
-          "description": "English language support"
-        },
-        {
-          "id": "multilingual",
-          "label": "Multilingual",
-          "icon": "Globe2",
-          "description": "Multiple major languages"
-        },
-        {
-          "id": "specialized",
-          "label": "Specialized",
-          "icon": "BookMarked",
-          "description": "Specific language requirements"
-        },
-        {
-          "id": "universal",
-          "label": "Universal",
-          "icon": "Earth",
-          "description": "100+ languages"
-        }
-      ]
-    },
-    {
-      "id": 11,
-      "question": "What is your deployment preference?",
-      "multipleSelect": false,
-      "options": [
-        {
-          "id": "cloud",
-          "label": "Cloud",
-          "icon": "Cloud",
-          "description": "Fully managed cloud service"
-        },
-        {
-          "id": "hybrid",
-          "label": "Hybrid",
-          "icon": "CloudCog",
-          "description": "Mix of cloud and local"
-        },
-        {
-          "id": "local",
-          "label": "On-Premise",
-          "icon": "HardDrive",
-          "description": "Self-hosted infrastructure"
-        },
-        {
-          "id": "flexible",
-          "label": "Flexible",
-          "icon": "Shuffle",
-          "description": "Any deployment option"
-        }
-      ]
-    },
-    {
-      "id": 12,
-      "question": "What is your primary concern?",
-      "multipleSelect": true,
-      "options": [
-        {
-          "id": "accuracy",
-          "label": "Accuracy",
-          "icon": "CheckCircle",
-          "description": "Most accurate responses"
-        },
-        {
-          "id": "speed",
-          "label": "Speed",
-          "icon": "Timer",
-          "description": "Fastest response time"
-        },
-        {
-          "id": "cost",
-          "label": "Cost",
-          "icon": "PiggyBank",
-          "description": "Most cost-effective"
-        },
-        {
-          "id": "privacy",
-          "label": "Privacy",
-          "icon": "LockKeyhole",
-          "description": "Maximum data protection"
+          "id": "risk-standard",
+          "label": "Standard",
+          "icon": "ShieldQuestion",
+          "description": "Trust standard cloud providers"
         }
       ]
     }
   ],
   "llms": [
     {
-      "id": "gpt-4",
-      "name": "GPT-4",
-      "provider": "OpenAI",
-      "description": "Most capable model with broad knowledge",
-      "strengths": ["Accuracy", "Reasoning", "Versatility"],
+      "id": "azure-openai",
+      "name": "Azure OpenAI Service",
+      "provider": "Microsoft",
+      "description": "Enterprise-grade OpenAI models with Microsoft's compliance guarantees and data protection",
+      "strengths": ["No training on customer data", "HIPAA/BAA available", "Enterprise compliance", "Data residency options"],
+      "policyReferences": [
+        {
+          "feature": "No Training on Data",
+          "source": "Azure OpenAI Data, Privacy, and Security",
+          "excerpt": "Your prompts (inputs) and completions (outputs), your embeddings, and your training data: are NOT available to other customers. are NOT available to OpenAI. are NOT used to improve OpenAI models. are NOT used to improve any Microsoft or 3rd party products or services.",
+          "url": "https://learn.microsoft.com/en-us/legal/cognitive-services/openai/data-privacy",
+          "lastVerified": "2025-10"
+        },
+        {
+          "feature": "HIPAA Compliance",
+          "source": "Azure OpenAI HIPAA BAA",
+          "excerpt": "Azure OpenAI Service is covered under the Microsoft Business Associate Agreement (BAA) for HIPAA compliance when configured properly.",
+          "url": "https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-hipaa-us",
+          "lastVerified": "2025-10"
+        },
+        {
+          "feature": "GDPR Compliance",
+          "source": "Microsoft Trust Center",
+          "excerpt": "Azure OpenAI complies with GDPR requirements including data residency in EU regions, data processing agreements, and right to deletion.",
+          "url": "https://www.microsoft.com/en-us/trust-center/privacy/gdpr-overview",
+          "lastVerified": "2025-10"
+        },
+        {
+          "feature": "SOC 2 Certification",
+          "source": "Azure Compliance",
+          "excerpt": "Azure OpenAI Service maintains SOC 2 Type 2 certification demonstrating security, availability, and confidentiality controls.",
+          "url": "https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-soc-2",
+          "lastVerified": "2025-10"
+        }
+      ],
       "scores": {
-        "chat": 10,
-        "coding": 9,
-        "content": 10,
-        "analysis": 9,
-        "free": 0,
-        "low": 0,
-        "medium": 7,
-        "high": 10,
-        "critical": 3,
-        "important": 5,
-        "moderate": 8,
-        "flexible": 10,
-        "fastest": 6,
-        "fast": 8,
-        "balanced": 10,
-        "thorough": 10,
-        "small": 0,
-        "medium": 0,
-        "large": 10,
-        "any": 10,
-        "yes-vision": 10,
-        "yes-audio": 7,
-        "yes-both": 9,
-        "no": 10,
-        "none": 10,
-        "basic": 10,
-        "advanced": 7,
-        "full": 3,
-        "beginner": 10,
-        "intermediate": 10,
-        "advanced": 9,
-        "expert": 8,
-        "required": 10,
-        "preferred": 10,
-        "optional": 10,
-        "english": 10,
-        "multilingual": 10,
-        "specialized": 7,
-        "universal": 8,
-        "cloud": 10,
-        "hybrid": 3,
-        "local": 0,
-        "flexible": 10,
-        "accuracy": 10,
-        "speed": 7,
-        "cost": 5,
-        "privacy": 5
+        "no-training-guaranteed": 10,
+        "no-training-opt-out": 10,
+        "training-acceptable": 5,
+        "training-no-concern": 0,
+        "data-public": 10,
+        "data-personal": 10,
+        "data-health": 10,
+        "data-financial": 10,
+        "compliance-none": 10,
+        "compliance-gdpr": 10,
+        "compliance-hipaa": 10,
+        "compliance-soc2": 10,
+        "risk-zero": 3,
+        "risk-low": 10,
+        "risk-moderate": 10,
+        "risk-standard": 10
       }
     },
     {
-      "id": "claude-3-opus",
-      "name": "Claude 3 Opus",
+      "id": "anthropic-claude",
+      "name": "Claude API",
       "provider": "Anthropic",
-      "description": "Excellent reasoning and nuanced understanding",
-      "strengths": ["Analysis", "Writing", "Ethics"],
+      "description": "Privacy-focused AI assistant with strong commitments to not training on user data",
+      "strengths": ["No training on conversations", "SOC 2 Type 2", "Privacy-first design", "Transparent policies"],
+      "policyReferences": [
+        {
+          "feature": "No Training on Data",
+          "source": "Anthropic Commercial Terms of Service",
+          "excerpt": "Anthropic will not train on API inputs and outputs unless you explicitly opt in. For API users, your data is your data - we don't train our generative models on your inputs and outputs.",
+          "url": "https://www.anthropic.com/legal/commercial-terms",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "Data Retention",
+          "source": "Anthropic Privacy Policy",
+          "excerpt": "We retain API queries for 30 days for trust and safety purposes (abuse monitoring), then delete them. You can request immediate deletion.",
+          "url": "https://www.anthropic.com/legal/privacy",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "SOC 2 Type 2",
+          "source": "Anthropic Security & Compliance",
+          "excerpt": "Claude API maintains SOC 2 Type 2 certification, demonstrating our commitment to security, availability, and confidentiality.",
+          "url": "https://www.anthropic.com/security",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "GDPR Compliance",
+          "source": "Anthropic Privacy Policy",
+          "excerpt": "We comply with GDPR requirements including data processing agreements, right to access, right to deletion, and data portability.",
+          "url": "https://www.anthropic.com/legal/privacy",
+          "lastVerified": "2024-01"
+        }
+      ],
       "scores": {
-        "chat": 10,
-        "coding": 9,
-        "content": 10,
-        "analysis": 10,
-        "free": 0,
-        "low": 0,
-        "medium": 7,
-        "high": 10,
-        "critical": 4,
-        "important": 6,
-        "moderate": 8,
-        "flexible": 10,
-        "fastest": 5,
-        "fast": 7,
-        "balanced": 10,
-        "thorough": 10,
-        "small": 0,
-        "medium": 0,
-        "large": 10,
-        "any": 10,
-        "yes-vision": 10,
-        "yes-audio": 0,
-        "yes-both": 5,
-        "no": 10,
-        "none": 10,
-        "basic": 10,
-        "advanced": 6,
-        "full": 2,
-        "beginner": 10,
-        "intermediate": 10,
-        "advanced": 9,
-        "expert": 8,
-        "required": 10,
-        "preferred": 10,
-        "optional": 10,
-        "english": 10,
-        "multilingual": 9,
-        "specialized": 7,
-        "universal": 7,
-        "cloud": 10,
-        "hybrid": 2,
-        "local": 0,
-        "flexible": 10,
-        "accuracy": 10,
-        "speed": 6,
-        "cost": 5,
-        "privacy": 6
+        "no-training-guaranteed": 10,
+        "no-training-opt-out": 10,
+        "training-acceptable": 5,
+        "training-no-concern": 0,
+        "data-public": 10,
+        "data-personal": 8,
+        "data-health": 5,
+        "data-financial": 7,
+        "compliance-none": 10,
+        "compliance-gdpr": 10,
+        "compliance-hipaa": 0,
+        "compliance-soc2": 10,
+        "risk-zero": 2,
+        "risk-low": 9,
+        "risk-moderate": 10,
+        "risk-standard": 10
       }
     },
     {
-      "id": "llama-3-70b",
-      "name": "Llama 3 70B",
-      "provider": "Meta",
-      "description": "Open-source powerhouse with strong performance",
-      "strengths": ["Open-source", "Customizable", "Cost-effective"],
-      "scores": {
-        "chat": 8,
-        "coding": 8,
-        "content": 8,
-        "analysis": 8,
-        "free": 10,
-        "low": 10,
-        "medium": 10,
-        "high": 10,
-        "critical": 10,
-        "important": 10,
-        "moderate": 9,
-        "flexible": 8,
-        "fastest": 7,
-        "fast": 8,
-        "balanced": 9,
-        "thorough": 8,
-        "small": 0,
-        "medium": 5,
-        "large": 10,
-        "any": 9,
-        "yes-vision": 0,
-        "yes-audio": 0,
-        "yes-both": 0,
-        "no": 10,
-        "none": 5,
-        "basic": 8,
-        "advanced": 10,
-        "full": 10,
-        "beginner": 5,
-        "intermediate": 8,
-        "advanced": 10,
-        "expert": 10,
-        "required": 9,
-        "preferred": 10,
-        "optional": 10,
-        "english": 9,
-        "multilingual": 9,
-        "specialized": 7,
-        "universal": 7,
-        "cloud": 8,
-        "hybrid": 10,
-        "local": 10,
-        "flexible": 10,
-        "accuracy": 8,
-        "speed": 7,
-        "cost": 10,
-        "privacy": 10
-      }
-    },
-    {
-      "id": "gemini-pro",
-      "name": "Gemini Pro",
-      "provider": "Google",
-      "description": "Strong multimodal capabilities with Google integration",
-      "strengths": ["Multimodal", "Speed", "Integration"],
-      "scores": {
-        "chat": 9,
-        "coding": 8,
-        "content": 9,
-        "analysis": 9,
-        "free": 8,
-        "low": 10,
-        "medium": 10,
-        "high": 10,
-        "critical": 3,
-        "important": 5,
-        "moderate": 8,
-        "flexible": 10,
-        "fastest": 9,
-        "fast": 10,
-        "balanced": 9,
-        "thorough": 8,
-        "small": 0,
-        "medium": 0,
-        "large": 10,
-        "any": 10,
-        "yes-vision": 10,
-        "yes-audio": 8,
-        "yes-both": 10,
-        "no": 9,
-        "none": 10,
-        "basic": 10,
-        "advanced": 6,
-        "full": 2,
-        "beginner": 10,
-        "intermediate": 10,
-        "advanced": 8,
-        "expert": 7,
-        "required": 10,
-        "preferred": 10,
-        "optional": 10,
-        "english": 10,
-        "multilingual": 10,
-        "specialized": 8,
-        "universal": 9,
-        "cloud": 10,
-        "hybrid": 2,
-        "local": 0,
-        "flexible": 10,
-        "accuracy": 8,
-        "speed": 10,
-        "cost": 8,
-        "privacy": 5
-      }
-    },
-    {
-      "id": "mistral-large",
-      "name": "Mistral Large",
-      "provider": "Mistral AI",
-      "description": "European AI with strong privacy focus",
-      "strengths": ["Privacy", "European data laws", "Cost-effective"],
-      "scores": {
-        "chat": 8,
-        "coding": 8,
-        "content": 8,
-        "analysis": 8,
-        "free": 5,
-        "low": 8,
-        "medium": 10,
-        "high": 10,
-        "critical": 8,
-        "important": 10,
-        "moderate": 9,
-        "flexible": 7,
-        "fastest": 8,
-        "fast": 9,
-        "balanced": 9,
-        "thorough": 8,
-        "small": 0,
-        "medium": 7,
-        "large": 10,
-        "any": 9,
-        "yes-vision": 0,
-        "yes-audio": 0,
-        "yes-both": 0,
-        "no": 10,
-        "none": 8,
-        "basic": 9,
-        "advanced": 8,
-        "full": 5,
-        "beginner": 8,
-        "intermediate": 9,
-        "advanced": 9,
-        "expert": 8,
-        "required": 10,
-        "preferred": 10,
-        "optional": 10,
-        "english": 9,
-        "multilingual": 9,
-        "specialized": 8,
-        "universal": 7,
-        "cloud": 10,
-        "hybrid": 6,
-        "local": 3,
-        "flexible": 9,
-        "accuracy": 8,
-        "speed": 8,
-        "cost": 8,
-        "privacy": 10
-      }
-    },
-    {
-      "id": "gpt-3.5-turbo",
-      "name": "GPT-3.5 Turbo",
+      "id": "openai-api",
+      "name": "OpenAI API",
       "provider": "OpenAI",
-      "description": "Fast and cost-effective for most tasks",
-      "strengths": ["Speed", "Cost", "Efficiency"],
+      "description": "Powerful GPT models with opt-out from training, suitable for most commercial applications",
+      "strengths": ["Opt-out from training", "Enterprise tier available", "Advanced models", "Widespread adoption"],
+      "policyReferences": [
+        {
+          "feature": "Training on Data (Opt-Out)",
+          "source": "OpenAI API Data Usage Policies",
+          "excerpt": "As of March 1, 2023, OpenAI does not use data submitted via the API to train or improve models unless you explicitly opt in. API data may be retained for up to 30 days for abuse and misuse monitoring.",
+          "url": "https://openai.com/policies/api-data-usage-policies",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "Data Retention",
+          "source": "OpenAI API Data Usage Policies",
+          "excerpt": "API data is retained for 30 days for abuse monitoring purposes, after which it is deleted (unless required by law).",
+          "url": "https://openai.com/policies/api-data-usage-policies",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "Enterprise Privacy",
+          "source": "OpenAI Enterprise Privacy",
+          "excerpt": "OpenAI offers enterprise agreements with enhanced privacy controls, custom data retention policies, and additional security features.",
+          "url": "https://openai.com/enterprise-privacy",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "SOC 2 Compliance",
+          "source": "OpenAI Security Portal",
+          "excerpt": "OpenAI maintains SOC 2 Type 2 compliance for the API service.",
+          "url": "https://trust.openai.com",
+          "lastVerified": "2024-01"
+        }
+      ],
       "scores": {
-        "chat": 9,
-        "coding": 7,
-        "content": 8,
-        "analysis": 7,
-        "free": 5,
-        "low": 10,
-        "medium": 10,
-        "high": 10,
-        "critical": 3,
-        "important": 5,
-        "moderate": 8,
-        "flexible": 10,
-        "fastest": 10,
-        "fast": 10,
-        "balanced": 8,
-        "thorough": 6,
-        "small": 0,
-        "medium": 8,
-        "large": 7,
-        "any": 8,
-        "yes-vision": 0,
-        "yes-audio": 0,
-        "yes-both": 0,
-        "no": 10,
-        "none": 10,
-        "basic": 10,
-        "advanced": 5,
-        "full": 2,
-        "beginner": 10,
-        "intermediate": 10,
-        "advanced": 7,
-        "expert": 5,
-        "required": 10,
-        "preferred": 10,
-        "optional": 10,
-        "english": 10,
-        "multilingual": 9,
-        "specialized": 6,
-        "universal": 7,
-        "cloud": 10,
-        "hybrid": 2,
-        "local": 0,
-        "flexible": 10,
-        "accuracy": 7,
-        "speed": 10,
-        "cost": 10,
-        "privacy": 5
+        "no-training-guaranteed": 8,
+        "no-training-opt-out": 10,
+        "training-acceptable": 7,
+        "training-no-concern": 10,
+        "data-public": 10,
+        "data-personal": 7,
+        "data-health": 3,
+        "data-financial": 6,
+        "compliance-none": 10,
+        "compliance-gdpr": 7,
+        "compliance-hipaa": 0,
+        "compliance-soc2": 9,
+        "risk-zero": 1,
+        "risk-low": 7,
+        "risk-moderate": 9,
+        "risk-standard": 10
+      }
+    },
+    {
+      "id": "llama-self-hosted",
+      "name": "Llama 3 (Self-Hosted)",
+      "provider": "Meta (Open Source)",
+      "description": "Open-source model you can run on your own infrastructure with complete data control",
+      "strengths": ["Complete data control", "No external data transfer", "Free to use", "Highly customizable"],
+      "policyReferences": [
+        {
+          "feature": "Complete Data Control",
+          "source": "Meta Llama 3 License",
+          "excerpt": "Llama 3 is released under a permissive open source license. When self-hosted, you have complete control over all data - nothing is sent to Meta or any third party.",
+          "url": "https://llama.meta.com/llama3/license/",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "Self-Hosted Privacy",
+          "source": "Llama Documentation",
+          "excerpt": "Self-hosting Llama ensures that all data processing occurs on your own infrastructure. No telemetry, tracking, or external API calls are made.",
+          "url": "https://github.com/meta-llama/llama3",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "Compliance Responsibility",
+          "source": "Self-Hosting Best Practices",
+          "excerpt": "When self-hosting, you are responsible for implementing your own compliance controls (GDPR, HIPAA, etc.) as appropriate for your use case and jurisdiction.",
+          "url": "https://github.com/meta-llama/llama3",
+          "lastVerified": "2024-01"
+        }
+      ],
+      "scores": {
+        "no-training-guaranteed": 10,
+        "no-training-opt-out": 10,
+        "training-acceptable": 10,
+        "training-no-concern": 10,
+        "data-public": 10,
+        "data-personal": 10,
+        "data-health": 10,
+        "data-financial": 10,
+        "compliance-none": 10,
+        "compliance-gdpr": 8,
+        "compliance-hipaa": 8,
+        "compliance-soc2": 5,
+        "risk-zero": 10,
+        "risk-low": 10,
+        "risk-moderate": 9,
+        "risk-standard": 8
+      }
+    },
+    {
+      "id": "google-gemini",
+      "name": "Google Gemini API",
+      "provider": "Google",
+      "description": "Google's multimodal AI with enterprise features and Google Cloud compliance",
+      "strengths": ["Multimodal capabilities", "Google Cloud compliance", "Enterprise features", "Data residency options"],
+      "policyReferences": [
+        {
+          "feature": "Training on Data",
+          "source": "Gemini API Data Usage",
+          "excerpt": "Google does not use your Gemini API prompts or responses to train its generative models unless you opt in to sharing your data.",
+          "url": "https://ai.google.dev/gemini-api/terms",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "Data Retention",
+          "source": "Google Cloud Privacy Notice",
+          "excerpt": "Gemini API requests are logged for up to 30 days for abuse prevention, then deleted unless you configure custom retention policies.",
+          "url": "https://cloud.google.com/terms/cloud-privacy-notice",
+          "lastVerified": "2024-01"
+        },
+        {
+          "feature": "Compliance Certifications",
+          "source": "Google Cloud Compliance",
+          "excerpt": "Google Cloud (including Gemini API via Vertex AI) maintains compliance certifications including SOC 2, ISO 27001, GDPR, and HIPAA (via BAA).",
+          "url": "https://cloud.google.com/security/compliance",
+          "lastVerified": "2024-01"
+        }
+      ],
+      "scores": {
+        "no-training-guaranteed": 9,
+        "no-training-opt-out": 10,
+        "training-acceptable": 7,
+        "training-no-concern": 10,
+        "data-public": 10,
+        "data-personal": 8,
+        "data-health": 7,
+        "data-financial": 8,
+        "compliance-none": 10,
+        "compliance-gdpr": 9,
+        "compliance-hipaa": 8,
+        "compliance-soc2": 10,
+        "risk-zero": 2,
+        "risk-low": 8,
+        "risk-moderate": 9,
+        "risk-standard": 10
       }
     }
   ]

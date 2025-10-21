@@ -1,5 +1,7 @@
-import { Trophy, Award, Medal, CheckCircle2, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { Trophy, Award, Medal, CheckCircle2, ArrowRight, FileText } from 'lucide-react';
 import { ScoredLLM } from '../utils/scoring';
+import PolicyModal from './PolicyModal';
 
 interface ResultsProps {
   results: ScoredLLM[];
@@ -7,6 +9,7 @@ interface ResultsProps {
 }
 
 export default function Results({ results, onRestart }: ResultsProps) {
+  const [selectedLLM, setSelectedLLM] = useState<ScoredLLM | null>(null);
   const topThree = results.slice(0, 3);
   const winner = topThree[0];
 
@@ -66,7 +69,7 @@ export default function Results({ results, onRestart }: ResultsProps) {
 
             <div>
               <h3 className="text-sm font-semibold mb-2 text-slate-300">Key Strengths</h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {winner.strengths.map((strength) => (
                   <span
                     key={strength}
@@ -77,6 +80,16 @@ export default function Results({ results, onRestart }: ResultsProps) {
                   </span>
                 ))}
               </div>
+
+              {winner.policyReferences && winner.policyReferences.length > 0 && (
+                <button
+                  onClick={() => setSelectedLLM(winner)}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+                >
+                  <FileText size={16} />
+                  View Privacy & Compliance References
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -101,32 +114,44 @@ export default function Results({ results, onRestart }: ResultsProps) {
                 </div>
                 <p className="text-slate-600 mb-3">{llm.description}</p>
 
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-slate-500">Match Score</span>
-                      <span className="text-sm font-bold text-slate-900">
-                        {Math.round(llm.matchPercentage)}%
-                      </span>
+                <div className="mb-3">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-slate-500">Match Score</span>
+                        <span className="text-sm font-bold text-slate-900">
+                          {Math.round(llm.matchPercentage)}%
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-slate-400 transition-all duration-1000"
+                          style={{ width: `${llm.matchPercentage}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-slate-400 transition-all duration-1000"
-                        style={{ width: `${llm.matchPercentage}%` }}
-                      />
+                    <div className="flex flex-wrap gap-1">
+                      {llm.strengths.slice(0, 3).map((strength) => (
+                        <span
+                          key={strength}
+                          className="px-2 py-1 bg-slate-50 rounded text-xs text-slate-600"
+                        >
+                          {strength}
+                        </span>
+                      ))}
                     </div>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {llm.strengths.slice(0, 3).map((strength) => (
-                      <span
-                        key={strength}
-                        className="px-2 py-1 bg-slate-50 rounded text-xs text-slate-600"
-                      >
-                        {strength}
-                      </span>
-                    ))}
                   </div>
                 </div>
+
+                {llm.policyReferences && llm.policyReferences.length > 0 && (
+                  <button
+                    onClick={() => setSelectedLLM(llm)}
+                    className="inline-flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-medium text-slate-700 transition-colors"
+                  >
+                    <FileText size={14} />
+                    View Policy References
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -142,6 +167,16 @@ export default function Results({ results, onRestart }: ResultsProps) {
           <ArrowRight size={20} />
         </button>
       </div>
+
+      {/* Policy References Modal */}
+      {selectedLLM && selectedLLM.policyReferences && (
+        <PolicyModal
+          isOpen={true}
+          onClose={() => setSelectedLLM(null)}
+          llmName={selectedLLM.name}
+          policyReferences={selectedLLM.policyReferences}
+        />
+      )}
     </div>
   );
 }

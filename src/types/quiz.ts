@@ -12,12 +12,21 @@ export interface Question {
   options: Option[];
 }
 
+export interface PolicyReference {
+  feature: string;
+  source: string;
+  excerpt: string;
+  url: string;
+  lastVerified: string;
+}
+
 export interface LLM {
   id: string;
   name: string;
   provider: string;
   description: string;
   strengths: string[];
+  policyReferences?: PolicyReference[];
   scores: Record<string, number>;
 }
 

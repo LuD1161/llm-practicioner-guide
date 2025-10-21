@@ -69,7 +69,7 @@ function App() {
         <div className="max-w-2xl w-full text-center animate-fade-in">
           <div className="mb-8">
             <img
-              src="https://cf-store.widencdn.net/cmu/4/6/a/46ac8372-3330-4644-9c60-c7b77833fe55.png?response-content-disposition=attachment%3B%20filename%3D%22cmu-wordmark-stacked-r.png%22&response-content-type=image%2Fpng&Expires=1761027913&Signature=fFeb-2btmEs8Ievg88WVRijp9AXQizj6xPCMKrUD29IsRHuXdDZXBZkhJGs2oJpx0HEB4YqcFas9hO~rkyA9kv8dpAR~ba13kyP5fXUILI4LX-v6dWXtAt1vflx4ywkdWXmZMkbNXpdQdt3Ej~bC29IP3R-J63AOTNsXya-R4mHtxjpx1fab5Sstn7vwLFtyRQuUgiy2-Tjxy3TimoFH4fK0DHnv33dc7fhsmWDKGaneYCLBO8~3VPKcDHPE7wW2gaPNOXMXlT7-HDSzWLWFf0swsvQhueRaktwoCI9P6DoNHSOWVe~~EimEA~tNiWhAxO7sKKtwuU6-wK-WmareeA__&Key-Pair-Id=APKAJD5XONOBVWWOA65A"
+              src="/cmu-logo.png"
               alt="Carnegie Mellon University"
               className="h-20 mx-auto"
             />
@@ -80,8 +80,8 @@ function App() {
           </h1>
 
           <p className="text-xl text-slate-600 mb-12 leading-relaxed">
-            Find the perfect Large Language Model for your needs. Answer {totalQuestions} quick questions
-            and get personalized recommendations based on your requirements.
+            Find the perfect Large Language Model for your needs. 
+            <br />Answer quick questions and get personalized recommendations based on your requirements.
           </p>
 
           <button

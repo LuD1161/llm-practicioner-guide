@@ -1,4 +1,5 @@
-import { CheckCircle2, Circle } from 'lucide-react';
+import { useState } from 'react';
+import { CheckCircle2, Circle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Question, UserAnswers } from '../types/quiz';
 
 interface QuizSidebarProps {
@@ -14,12 +15,26 @@ export default function QuizSidebar({
   userAnswers,
   onQuestionClick,
 }: QuizSidebarProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const answeredCount = Object.keys(userAnswers).length;
   const totalQuestions = questions.length;
   const percentage = (answeredCount / totalQuestions) * 100;
 
   return (
-    <div className="w-80 bg-white border-r border-slate-200 p-6 overflow-y-auto">
+    <div className={`relative bg-white border-r border-slate-200 overflow-y-auto transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-80'}`}>
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="absolute top-4 -right-3 z-10 w-6 h-6 bg-white border border-slate-200 rounded-full flex items-center justify-center hover:bg-slate-50 transition-colors shadow-sm"
+        aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      >
+        {isCollapsed ? (
+          <ChevronRight size={14} className="text-slate-600" />
+        ) : (
+          <ChevronLeft size={14} className="text-slate-600" />
+        )}
+      </button>
+
+      <div className={`p-6 ${isCollapsed ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}>
       <div className="mb-8">
         <h3 className="text-sm font-semibold text-slate-900 mb-2">Progress</h3>
         <div className="flex items-center justify-between mb-2">
@@ -105,6 +120,7 @@ export default function QuizSidebar({
             );
           })}
         </div>
+      </div>
       </div>
     </div>
   );

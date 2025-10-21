@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Brain } from 'lucide-react';
 import QuizQuestion from './components/QuizQuestion';
 import ProgressBar from './components/ProgressBar';
+import QuizSidebar from './components/QuizSidebar';
 import Results from './components/Results';
 import quizData from './data/quiz-data.json';
 import { QuizData, UserAnswers } from './types/quiz';
@@ -115,59 +116,66 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 mb-6">
-            <Brain className="text-slate-900" size={32} />
-            <h1 className="text-2xl font-bold text-slate-900">LLM Selection Guide</h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex">
+      <QuizSidebar
+        questions={data.questions}
+        currentQuestionIndex={currentQuestionIndex}
+        userAnswers={userAnswers}
+        onQuestionClick={setCurrentQuestionIndex}
+      />
+
+      <div className="flex-1 py-8 px-4 overflow-y-auto">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Brain className="text-slate-900" size={32} />
+              <h1 className="text-2xl font-bold text-slate-900">LLM Selection Guide</h1>
+            </div>
           </div>
-        </div>
 
-        <ProgressBar current={currentQuestionIndex + 1} total={totalQuestions} />
+          <div className="mb-12">
+            <QuizQuestion
+              question={currentQuestion}
+              selectedOptions={currentAnswer || null}
+              onSelectOption={handleSelectOption}
+            />
+          </div>
 
-        <div className="mb-12">
-          <QuizQuestion
-            question={currentQuestion}
-            selectedOptions={currentAnswer || null}
-            onSelectOption={handleSelectOption}
-          />
-        </div>
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handlePrevious}
+              disabled={currentQuestionIndex === 0}
+              className={`
+                px-6 py-3 rounded-lg font-semibold transition-all
+                ${currentQuestionIndex === 0
+                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                  : 'bg-white text-slate-900 border-2 border-slate-300 hover:border-slate-900'
+                }
+              `}
+            >
+              Previous
+            </button>
 
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <button
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
-            className={`
-              px-6 py-3 rounded-lg font-semibold transition-all
-              ${currentQuestionIndex === 0
-                ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                : 'bg-white text-slate-900 border-2 border-slate-300 hover:border-slate-900'
-              }
-            `}
-          >
-            Previous
-          </button>
+            <button
+              onClick={handleNext}
+              disabled={!canProceed}
+              className={`
+                px-8 py-3 rounded-lg font-semibold transition-all
+                ${!canProceed
+                  ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                  : 'bg-slate-900 text-white hover:bg-slate-800 shadow-lg hover:shadow-xl'
+                }
+              `}
+            >
+              {currentQuestionIndex === totalQuestions - 1 ? 'See Results' : 'Next'}
+            </button>
+          </div>
 
-          <button
-            onClick={handleNext}
-            disabled={!canProceed}
-            className={`
-              px-8 py-3 rounded-lg font-semibold transition-all
-              ${!canProceed
-                ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                : 'bg-slate-900 text-white hover:bg-slate-800 shadow-lg hover:shadow-xl'
-              }
-            `}
-          >
-            {currentQuestionIndex === totalQuestions - 1 ? 'See Results' : 'Next'}
-          </button>
-        </div>
-
-        <div className="mt-16 pt-8 border-t border-slate-200 text-center">
-          <p className="text-sm text-slate-500">
-            Developed by CMU Privacy Engineering
-          </p>
+          <div className="mt-16 pt-8 border-t border-slate-200 text-center">
+            <p className="text-sm text-slate-500">
+              Developed by CMU Privacy Engineering
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -111,11 +111,11 @@ export default function QuizSidebar({
                                 : 'text-slate-400'
                               }`}
                           >
-                            {question.text}
+                            {question.question}
                           </p>
                           {/* Tooltip for full question */}
                           <div className="absolute left-0 bottom-full mb-2 w-64 p-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 invisible group-hover/question:opacity-100 group-hover/question:visible transition-all z-50 shadow-xl pointer-events-none">
-                            {question.text}
+                            {question.question}
                             <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-900"></div>
                           </div>
                         </div>

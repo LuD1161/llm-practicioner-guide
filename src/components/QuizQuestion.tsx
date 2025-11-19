@@ -106,10 +106,7 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
           </div>
         ))}
       </div>
-
-      <div className="mt-6 text-center text-sm text-slate-500">
-        Use arrow keys to navigate, Space or Enter to select
-      </div>
     </div>
   );
 }
+```

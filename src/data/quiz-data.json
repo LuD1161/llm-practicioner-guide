@@ -25,6 +25,11 @@
           "id": "train-allow",
           "label": "Training Allowed",
           "description": "No restrictions on training"
+        },
+        {
+          "id": "train-notimportant",
+          "label": "Not Important",
+          "description": "Training policy doesn't matter to me"
         }
       ]
     },
@@ -53,6 +58,11 @@
           "id": "data-general",
           "label": "General / Public",
           "description": "Non-sensitive, public information"
+        },
+        {
+          "id": "data-notimportant",
+          "label": "Not Important",
+          "description": "Data type doesn't matter to me"
         }
       ]
     },
@@ -86,6 +96,11 @@
           "id": "sec-dlp",
           "label": "Data Leak Protection",
           "description": "Prevention of sensitive data exfiltration"
+        },
+        {
+          "id": "sec-notimportant",
+          "label": "Not Important",
+          "description": "Security features don't matter to me"
         }
       ]
     },
@@ -114,6 +129,11 @@
           "id": "comp-soc2",
           "label": "SOC 2",
           "description": "SOC 2 Certified"
+        },
+        {
+          "id": "comp-notimportant",
+          "label": "Not Important",
+          "description": "Compliance certifications don't matter to me"
         }
       ]
     },
@@ -137,6 +157,11 @@
           "id": "right-retention",
           "label": "Custom Retention",
           "description": "Control over how long data is kept"
+        },
+        {
+          "id": "right-notimportant",
+          "label": "Not Important",
+          "description": "User rights don't matter to me"
         }
       ]
     },
@@ -160,6 +185,11 @@
           "id": "trans-notify",
           "label": "Policy Change Notice",
           "description": "Proactive notification of changes"
+        },
+        {
+          "id": "trans-notimportant",
+          "label": "Not Important",
+          "description": "Transparency features don't matter to me"
         }
       ]
     }

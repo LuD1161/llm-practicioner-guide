@@ -17,15 +17,21 @@ export function calculateLLMScores(
 
     answerValues.forEach((answer) => {
       if (Array.isArray(answer)) {
-        answer.forEach((answerId) => {
+        // Filter out 'Not Important' options
+        const relevantAnswers = answer.filter(answerId => !answerId.endsWith('-notimportant'));
+
+        relevantAnswers.forEach((answerId) => {
           const score = llm.scores[answerId] || 0;
           totalScore += score;
           maxPossibleScore += 10;
         });
       } else {
-        const score = llm.scores[answer] || 0;
-        totalScore += score;
-        maxPossibleScore += 10;
+        // Skip if this is a 'Not Important' answer
+        if (!answer.endsWith('-notimportant')) {
+          const score = llm.scores[answer] || 0;
+          totalScore += score;
+          maxPossibleScore += 10;
+        }
       }
     });
 
@@ -42,3 +48,4 @@ export function calculateLLMScores(
 
   return scoredLLMs.sort((a, b) => b.matchPercentage - a.matchPercentage);
 }
+

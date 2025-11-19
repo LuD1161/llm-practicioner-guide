@@ -1,6 +1,6 @@
 import React from 'react';
 import { Question, UserAnswers } from '../types/quiz';
-import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 
 interface QuestionConfiguratorProps {
     questions: Question[];
@@ -55,20 +55,27 @@ export default function QuestionConfigurator({
                             className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors text-left"
                         >
                             <span className="font-medium text-sm text-slate-700">{category}</span>
-                            {expandedCategories.includes(category) ? (
-                                <ChevronUp size={16} className="text-slate-500" />
-                            ) : (
-                                <ChevronDown size={16} className="text-slate-500" />
-                            )}
+                            <ChevronDown
+                                size={16}
+                                className={`text-slate-500 transition-transform duration-200 ${expandedCategories.includes(category) ? 'rotate-180' : ''
+                                    }`}
+                            />
                         </button>
 
                         {expandedCategories.includes(category) && (
                             <div className="mt-2 space-y-4 pl-2 pr-1 pb-2">
                                 {categoryQuestions.map((question) => (
                                     <div key={question.id} className="text-sm">
-                                        <p className="font-medium text-slate-800 mb-2 text-xs">
-                                            {question.question}
-                                        </p>
+                                        <div className="relative group/question">
+                                            <p className="font-medium text-slate-800 mb-2 text-xs truncate cursor-help">
+                                                {question.question}
+                                            </p>
+                                            {/* Tooltip for full question */}
+                                            <div className="absolute left-0 bottom-full mb-2 w-64 p-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 invisible group-hover/question:opacity-100 group-hover/question:visible transition-all z-50 shadow-xl pointer-events-none">
+                                                {question.question}
+                                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-900"></div>
+                                            </div>
+                                        </div>
                                         <div className="space-y-1">
                                             {question.options.map((option) => {
                                                 const isSelected = Array.isArray(userAnswers[question.id])

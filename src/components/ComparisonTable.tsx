@@ -50,12 +50,70 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
         const tableHead = [['Feature', ...selectedModels.map(m => m.name)]];
 
         const tableBody = [
-            // Privacy Section
-            [{ content: 'PRIVACY & COMPLIANCE', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['No Training on Data', ...selectedModels.map(m => m.privacyFeatures?.noTraining === true ? 'Yes' : 'No')],
-            ['GDPR Compliant', ...selectedModels.map(m => m.privacyFeatures?.gdprCompliant === true ? 'Yes' : 'No')],
-            ['SOC 2 Certified', ...selectedModels.map(m => m.privacyFeatures?.soc2 === true ? 'Yes' : 'No')],
-            ['Data Residency', ...selectedModels.map(m => m.privacyFeatures?.dataResidency?.join(', ') || '-')],
+            // Training Policy
+            [{ content: 'TRAINING POLICY', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Model Training', ...selectedModels.map(m => {
+                const tags = [];
+                if (m.scores?.['train-none'] === 10) tags.push('No Training');
+                if (m.scores?.['train-opt-out'] === 10) tags.push('Opt-out');
+                if (m.scores?.['train-anon'] === 10) tags.push('Anonymized');
+                if (m.scores?.['train-allow'] === 10) tags.push('Allowed');
+                return tags.join(', ') || '-';
+            })],
+
+            // Data Support
+            [{ content: 'DATA SUPPORT', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Supported Data Types', ...selectedModels.map(m => {
+                const tags = [];
+                if (m.scores?.['data-pii'] === 10) tags.push('PII');
+                if (m.scores?.['data-sensitive'] === 10) tags.push('Sensitive');
+                if (m.scores?.['data-minors'] === 10) tags.push('Minors');
+                if (m.scores?.['data-general'] === 10) tags.push('General');
+                return tags.join(', ') || '-';
+            })],
+
+            // Security
+            [{ content: 'SECURITY FEATURES', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Available Features', ...selectedModels.map(m => {
+                const tags = [];
+                if (m.scores?.['sec-enc'] === 10) tags.push('Encryption');
+                if (m.scores?.['sec-sso'] === 10) tags.push('SSO');
+                if (m.scores?.['sec-mfa'] === 10) tags.push('MFA');
+                if (m.scores?.['sec-audit'] === 10) tags.push('Audit Logs');
+                if (m.scores?.['sec-dlp'] === 10) tags.push('DLP');
+                return tags.join(', ') || '-';
+            })],
+
+            // Compliance
+            [{ content: 'COMPLIANCE & CERTIFICATIONS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Certifications', ...selectedModels.map(m => {
+                const tags = [];
+                if (m.scores?.['comp-gdpr'] === 10) tags.push('GDPR');
+                if (m.scores?.['comp-ccpa'] === 10) tags.push('CCPA');
+                if (m.scores?.['comp-hipaa'] === 10) tags.push('HIPAA');
+                if (m.scores?.['comp-soc2'] === 10) tags.push('SOC 2');
+                return tags.join(', ') || '-';
+            })],
+
+            // User Rights
+            [{ content: 'USER RIGHTS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Available Rights', ...selectedModels.map(m => {
+                const tags = [];
+                if (m.scores?.['right-delete'] === 10) tags.push('Delete');
+                if (m.scores?.['right-access'] === 10) tags.push('Access');
+                if (m.scores?.['right-retention'] === 10) tags.push('Retention');
+                return tags.join(', ') || '-';
+            })],
+
+            // Transparency
+            [{ content: 'TRANSPARENCY', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Transparency Features', ...selectedModels.map(m => {
+                const tags = [];
+                if (m.scores?.['trans-subproc'] === 10) tags.push('Subprocessors');
+                if (m.scores?.['trans-sharing'] === 10) tags.push('No Ad Sharing');
+                if (m.scores?.['trans-notify'] === 10) tags.push('Policy Notices');
+                return tags.join(', ') || '-';
+            })],
 
             // Strengths Section
             [{ content: 'KEY STRENGTHS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
@@ -80,15 +138,6 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
         });
 
         doc.save('llm-comparison-report.pdf');
-    };
-
-    // Helper to get privacy feature value safely
-    const getPrivacyFeature = (model: ScoredLLM, key: string) => {
-        // @ts-ignore - dynamic access to privacyFeatures
-        const val = model.privacyFeatures?.[key];
-        if (val === true) return <Check size={16} className="text-emerald-500 mx-auto" />;
-        if (val === false) return <X size={16} className="text-rose-500 mx-auto" />;
-        return <span className="text-sm text-slate-600">{val}</span>;
     };
 
     return (
@@ -159,48 +208,125 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
-                        {/* Privacy & Compliance Section */}
+                        {/* Training Policy */}
                         <tr className="bg-slate-50/50">
                             <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
-                                Privacy & Compliance
+                                Training Policy
                             </td>
                         </tr>
                         <tr>
-                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">No Training on Data</td>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Model Training</td>
                             {selectedModels.map(m => (
-                                <td key={m.id} className="p-4 text-center border-r border-slate-200">
-                                    {getPrivacyFeature(m, 'noTraining')}
-                                </td>
-                            ))}
-                            {selectedModelIds.length < 4 && <td />}
-                        </tr>
-                        <tr>
-                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">GDPR Compliant</td>
-                            {selectedModels.map(m => (
-                                <td key={m.id} className="p-4 text-center border-r border-slate-200">
-                                    {getPrivacyFeature(m, 'gdprCompliant')}
-                                </td>
-                            ))}
-                            {selectedModelIds.length < 4 && <td />}
-                        </tr>
-                        <tr>
-                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">SOC 2 Certified</td>
-                            {selectedModels.map(m => (
-                                <td key={m.id} className="p-4 text-center border-r border-slate-200">
-                                    {getPrivacyFeature(m, 'soc2')}
-                                </td>
-                            ))}
-                            {selectedModelIds.length < 4 && <td />}
-                        </tr>
-                        <tr>
-                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Data Residency</td>
-                            {selectedModels.map(m => (
-                                <td key={m.id} className="p-4 text-center border-r border-slate-200">
+                                <td key={m.id} className="p-4 border-r border-slate-200">
                                     <div className="flex flex-wrap justify-center gap-1">
-                                        {/* @ts-ignore */}
-                                        {m.privacyFeatures?.dataResidency?.map((r: string) => (
-                                            <span key={r} className="text-xs bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">{r}</span>
-                                        ))}
+                                        {m.scores?.['train-none'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700 font-medium">No Training</span>}
+                                        {m.scores?.['train-opt-out'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700 font-medium">Opt-out</span>}
+                                        {m.scores?.['train-anon'] === 10 && <span className="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-700 font-medium">Anonymized</span>}
+                                        {m.scores?.['train-allow'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700 font-medium">Allowed</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Data Sensitivity */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Data Support
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Supported Data Types</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['data-pii'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">PII</span>}
+                                        {m.scores?.['data-sensitive'] === 10 && <span className="text-xs bg-rose-100 px-2 py-0.5 rounded text-rose-700">Sensitive</span>}
+                                        {m.scores?.['data-minors'] === 10 && <span className="text-xs bg-purple-100 px-2 py-0.5 rounded text-purple-700">Minors</span>}
+                                        {m.scores?.['data-general'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700">General</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Security */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Security Features
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Available Features</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['sec-enc'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">Encryption</span>}
+                                        {m.scores?.['sec-sso'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">SSO</span>}
+                                        {m.scores?.['sec-mfa'] === 10 && <span className="text-xs bg-indigo-100 px-2 py-0.5 rounded text-indigo-700">MFA</span>}
+                                        {m.scores?.['sec-audit'] === 10 && <span className="text-xs bg-violet-100 px-2 py-0.5 rounded text-violet-700">Audit Logs</span>}
+                                        {m.scores?.['sec-dlp'] === 10 && <span className="text-xs bg-pink-100 px-2 py-0.5 rounded text-pink-700">DLP</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Compliance */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Compliance & Certifications
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Certifications</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['comp-gdpr'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700 font-medium">GDPR</span>}
+                                        {m.scores?.['comp-ccpa'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700 font-medium">CCPA</span>}
+                                        {m.scores?.['comp-hipaa'] === 10 && <span className="text-xs bg-rose-100 px-2 py-0.5 rounded text-rose-700 font-medium">HIPAA</span>}
+                                        {m.scores?.['comp-soc2'] === 10 && <span className="text-xs bg-indigo-100 px-2 py-0.5 rounded text-indigo-700 font-medium">SOC 2</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* User Rights */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                User Rights
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Available Rights</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['right-delete'] === 10 && <span className="text-xs bg-rose-100 px-2 py-0.5 rounded text-rose-700">Delete</span>}
+                                        {m.scores?.['right-access'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">Access</span>}
+                                        {m.scores?.['right-retention'] === 10 && <span className="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-700">Retention</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Transparency */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Transparency
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Transparency Features</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['trans-subproc'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">Subprocessors</span>}
+                                        {m.scores?.['trans-sharing'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700">No Ad Sharing</span>}
+                                        {m.scores?.['trans-notify'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">Policy Notices</span>}
                                     </div>
                                 </td>
                             ))}

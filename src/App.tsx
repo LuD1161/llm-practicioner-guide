@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Brain } from 'lucide-react';
 import QuizQuestion from './components/QuizQuestion';
-import ProgressBar from './components/ProgressBar';
 import QuizSidebar from './components/QuizSidebar';
 import Results from './components/Results';
 import quizData from './data/quiz-data.json';
 import { QuizData, UserAnswers } from './types/quiz';
-import { calculateLLMScores, ScoredLLM } from './utils/scoring';
+import { calculateLLMScores } from './utils/scoring';
 
 const data = quizData as QuizData;
 
@@ -17,20 +16,24 @@ function App() {
     return saved ? JSON.parse(saved) : {};
   });
   const [showResults, setShowResults] = useState(false);
-  const [results, setResults] = useState<ScoredLLM[]>([]);
   const [isStarted, setIsStarted] = useState(false);
 
   const currentQuestion = data.questions[currentQuestionIndex];
   const totalQuestions = data.questions.length;
 
+  const results = useMemo(() => {
+    return calculateLLMScores(data.llms, userAnswers);
+  }, [userAnswers]);
+
   useEffect(() => {
     localStorage.setItem('llm-quiz-answers', JSON.stringify(userAnswers));
   }, [userAnswers]);
 
-  const handleSelectOption = (optionId: string | string[]) => {
+  const handleSelectOption = (optionId: string | string[], questionId?: number) => {
+    const qId = questionId ?? currentQuestion.id;
     const newAnswers = {
       ...userAnswers,
-      [currentQuestion.id]: optionId,
+      [qId]: optionId,
     };
     setUserAnswers(newAnswers);
   };
@@ -39,8 +42,6 @@ function App() {
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      const calculatedResults = calculateLLMScores(data.llms, userAnswers);
-      setResults(calculatedResults);
       setShowResults(true);
     }
   };
@@ -80,7 +81,7 @@ function App() {
           </h1>
 
           <p className="text-xl text-slate-600 mb-12 leading-relaxed">
-            Find the perfect Large Language Model for your needs. 
+            Find the perfect Large Language Model for your needs.
             <br />Answer quick questions and get personalized recommendations based on your requirements.
           </p>
 
@@ -103,10 +104,17 @@ function App() {
 
   if (showResults) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12 px-4">
-        <Results results={results} onRestart={handleRestart} />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
+        <Results
+          results={results}
+          onRestart={handleRestart}
+          userAnswers={userAnswers}
+          onUpdateAnswer={(qId, val) => handleSelectOption(val, qId)}
+          allQuestions={data.questions}
+          allLLMs={data.llms}
+        />
 
-        <div className="mt-16 pt-8 border-t border-slate-200 text-center">
+        <div className="mt-8 pt-8 border-t border-slate-200 text-center">
           <p className="text-sm text-slate-500">
             Developed by CMU Privacy Engineering
           </p>

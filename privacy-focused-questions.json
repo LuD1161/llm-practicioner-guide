@@ -505,7 +505,6 @@
       ]
     }
   ],
-
   "recommendedLLMsWithPrivacyScores": {
     "note": "These are example LLMs with privacy-focused scoring. You should update with actual providers and their real privacy/compliance features.",
     "llms": [
@@ -514,68 +513,135 @@
         "name": "Azure OpenAI",
         "provider": "Microsoft",
         "description": "Enterprise-grade OpenAI models with Microsoft's compliance guarantees",
-        "strengths": ["Enterprise compliance", "Data residency", "BAA available", "No training on customer data"],
+        "strengths": [
+          "Enterprise compliance",
+          "Data residency",
+          "BAA available",
+          "No training on customer data"
+        ],
         "privacyFeatures": {
           "noTraining": true,
           "baaAvailable": true,
           "gdprCompliant": true,
           "hipaaCompliant": true,
           "soc2": true,
-          "dataResidency": ["US", "EU", "UK"],
+          "dataResidency": [
+            "US",
+            "EU",
+            "UK"
+          ],
           "zeroRetention": "Optional (30-day default)",
           "auditLogs": true,
           "deletionApi": true
-        }
+        },
+        "policyReferences": [
+          {
+            "feature": "No Training on Data",
+            "source": "Microsoft Trust Center",
+            "excerpt": "Microsoft does not use your data to train the base foundation models.",
+            "url": "https://learn.microsoft.com/en-us/legal/cognitive-services/openai/data-privacy",
+            "lastVerified": "2024-03-15"
+          },
+          {
+            "feature": "GDPR Compliance",
+            "source": "Azure Compliance Offerings",
+            "excerpt": "Azure OpenAI Service complies with GDPR requirements for data protection.",
+            "url": "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/?products=cognitive-services",
+            "lastVerified": "2024-03-15"
+          }
+        ]
       },
       {
         "id": "anthropic-claude",
         "name": "Claude (Anthropic)",
         "provider": "Anthropic",
         "description": "Privacy-focused AI with no training on user data",
-        "strengths": ["No training on conversations", "SOC 2 Type 2", "Privacy-first design"],
+        "strengths": [
+          "No training on conversations",
+          "SOC 2 Type 2",
+          "Privacy-first design"
+        ],
         "privacyFeatures": {
           "noTraining": true,
           "baaAvailable": false,
           "gdprCompliant": true,
           "hipaaCompliant": false,
           "soc2": true,
-          "dataResidency": ["US"],
+          "dataResidency": [
+            "US"
+          ],
           "zeroRetention": "30 days for abuse monitoring",
           "auditLogs": "Basic",
           "deletionApi": false
-        }
+        },
+        "policyReferences": [
+          {
+            "feature": "Data Usage",
+            "source": "Anthropic Privacy Policy",
+            "excerpt": "We do not train our models on your inputs or outputs.",
+            "url": "https://console.anthropic.com/legal/privacy",
+            "lastVerified": "2024-02-28"
+          }
+        ]
       },
       {
         "id": "aws-bedrock",
         "name": "Amazon Bedrock",
         "provider": "AWS",
         "description": "Multiple LLM models with AWS enterprise security and compliance",
-        "strengths": ["Multi-model support", "AWS compliance", "Data residency", "Customer-managed keys"],
+        "strengths": [
+          "Multi-model support",
+          "AWS compliance",
+          "Data residency",
+          "Customer-managed keys"
+        ],
         "privacyFeatures": {
           "noTraining": true,
           "baaAvailable": true,
           "gdprCompliant": true,
           "hipaaCompliant": true,
           "soc2": true,
-          "dataResidency": ["US", "EU", "Asia", "Custom regions"],
+          "dataResidency": [
+            "US",
+            "EU",
+            "Asia",
+            "Custom regions"
+          ],
           "zeroRetention": "Configurable",
           "auditLogs": "Comprehensive (CloudTrail)",
           "deletionApi": true
-        }
+        },
+        "policyReferences": [
+          {
+            "feature": "Data Privacy",
+            "source": "AWS Bedrock FAQs",
+            "excerpt": "AWS does not use your data to improve the base models.",
+            "url": "https://aws.amazon.com/bedrock/faqs/",
+            "lastVerified": "2024-04-01"
+          }
+        ]
       },
       {
         "id": "google-vertex-ai",
         "name": "Vertex AI",
         "provider": "Google Cloud",
         "description": "Google's LLMs with enterprise controls and compliance",
-        "strengths": ["Enterprise controls", "Data residency", "Multiple models"],
+        "strengths": [
+          "Enterprise controls",
+          "Data residency",
+          "Multiple models"
+        ],
         "privacyFeatures": {
           "noTraining": "Opt-out available",
           "baaAvailable": true,
           "gdprCompliant": true,
           "hipaaCompliant": true,
           "soc2": true,
-          "dataResidency": ["US", "EU", "Asia"],
+          "dataResidency": [
+            "US",
+            "EU",
+            "Asia"
+          ],
           "zeroRetention": "Configurable",
           "auditLogs": true,
           "deletionApi": true
@@ -586,14 +652,21 @@
         "name": "Llama 3 (Self-Hosted)",
         "provider": "Meta (Open Source)",
         "description": "Self-hosted open-source model with complete data control",
-        "strengths": ["Complete data control", "No external data transfer", "Customizable", "Free"],
+        "strengths": [
+          "Complete data control",
+          "No external data transfer",
+          "Customizable",
+          "Free"
+        ],
         "privacyFeatures": {
           "noTraining": true,
           "baaAvailable": "N/A (self-hosted)",
           "gdprCompliant": "Self-managed",
           "hipaaCompliant": "Self-managed",
           "soc2": "N/A",
-          "dataResidency": ["Your infrastructure"],
+          "dataResidency": [
+            "Your infrastructure"
+          ],
           "zeroRetention": "Full control",
           "auditLogs": "Self-implemented",
           "deletionApi": "Self-managed"
@@ -604,14 +677,21 @@
         "name": "Mistral AI (La Plateforme)",
         "provider": "Mistral AI",
         "description": "European AI provider with GDPR-first approach",
-        "strengths": ["European sovereignty", "GDPR compliance", "No training on data", "Transparent pricing"],
+        "strengths": [
+          "European sovereignty",
+          "GDPR compliance",
+          "No training on data",
+          "Transparent pricing"
+        ],
         "privacyFeatures": {
           "noTraining": true,
           "baaAvailable": false,
           "gdprCompliant": true,
           "hipaaCompliant": false,
           "soc2": "In progress",
-          "dataResidency": ["EU"],
+          "dataResidency": [
+            "EU"
+          ],
           "zeroRetention": "30 days",
           "auditLogs": "Basic",
           "deletionApi": "On request"

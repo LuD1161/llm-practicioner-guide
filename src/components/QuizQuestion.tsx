@@ -79,16 +79,20 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
 
   return (
     <div className="w-full max-w-4xl mx-auto animate-fade-in">
-      <h2 className="text-3xl font-bold text-slate-900 mb-4 text-center">
-        {question.question}
-      </h2>
-
-      {isMultiple && (
-        <div className="flex items-center justify-center gap-2 mb-8 text-slate-600">
-          <Info size={16} />
-          <p className="text-sm">You can select multiple options</p>
+      <div className="text-center mb-8">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <h2 className="text-3xl font-bold text-slate-900">
+            {question.question}
+          </h2>
         </div>
-      )}
+
+        {isMultiple && (
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg text-blue-700">
+            <Info size={16} className="flex-shrink-0" />
+            <p className="text-sm font-medium">You can select multiple options</p>
+          </div>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {question.options.map((option, index) => (
@@ -109,4 +113,3 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
     </div>
   );
 }
-```

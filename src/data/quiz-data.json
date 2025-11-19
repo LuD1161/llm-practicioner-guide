@@ -2,7 +2,7 @@
   "questions": [
     {
       "id": "data-training-policy",
-      "question": "What are your requirements for model training?",
+      "question": "Can the model train on your data?",
       "category": "Data Usage",
       "multipleSelect": true,
       "options": [
@@ -68,7 +68,7 @@
     },
     {
       "id": "security-requirements",
-      "question": "Which security features are mandatory?",
+      "question": "What security features do you need?",
       "category": "Security",
       "multipleSelect": true,
       "options": [

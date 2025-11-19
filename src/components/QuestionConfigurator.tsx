@@ -88,34 +88,30 @@ export default function QuestionConfigurator({
                                                         onClick={() => {
                                                             if (question.multipleSelect) {
                                                                 const current = (userAnswers[question.id] as string[]) || [];
-                                                                const exclusiveOptions = ['compliance-none', 'data-public'];
-                                                                const exclusiveOptionId = exclusiveOptions.find(id =>
-                                                                    question.options.some(opt => opt.id === id)
-                                                                );
+
+                                                                // Check if this option is a "Not Important" option
+                                                                const isNotImportant = option.id.endsWith('-notimportant');
 
                                                                 let newValue: string[];
 
-                                                                if (exclusiveOptionId) {
-                                                                    if (option.id === exclusiveOptionId) {
-                                                                        // If clicking exclusive option, clear others if selecting, or just deselect if already selected
-                                                                        newValue = current.includes(exclusiveOptionId)
-                                                                            ? []
-                                                                            : [exclusiveOptionId];
+                                                                if (isNotImportant) {
+                                                                    // If clicking "Not Important"
+                                                                    if (current.includes(option.id)) {
+                                                                        // Deselecting "Not Important"
+                                                                        newValue = [];
                                                                     } else {
-                                                                        // If clicking other option
-                                                                        if (current.includes(option.id)) {
-                                                                            // Deselecting
-                                                                            newValue = current.filter(id => id !== option.id);
-                                                                        } else {
-                                                                            // Selecting - remove exclusive option if present
-                                                                            newValue = [...current.filter(id => id !== exclusiveOptionId), option.id];
-                                                                        }
+                                                                        // Selecting "Not Important" - clear all other options
+                                                                        newValue = [option.id];
                                                                     }
                                                                 } else {
-                                                                    // Standard multiple select behavior
-                                                                    newValue = current.includes(option.id)
-                                                                        ? current.filter((id) => id !== option.id)
-                                                                        : [...current, option.id];
+                                                                    // If clicking a regular option
+                                                                    if (current.includes(option.id)) {
+                                                                        // Deselecting
+                                                                        newValue = current.filter(id => id !== option.id);
+                                                                    } else {
+                                                                        // Selecting - remove "Not Important" if present and add this option
+                                                                        newValue = [...current.filter(id => !id.endsWith('-notimportant')), option.id];
+                                                                    }
                                                                 }
 
                                                                 onUpdateAnswer(question.id, newValue);

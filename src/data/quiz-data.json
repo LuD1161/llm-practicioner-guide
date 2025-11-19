@@ -192,6 +192,95 @@
           "description": "Transparency features don't matter to me"
         }
       ]
+    },
+    {
+      "id": "data-residency",
+      "question": "Where can your data be stored?",
+      "category": "Data Location",
+      "multipleSelect": true,
+      "options": [
+        {
+          "id": "residency-us",
+          "label": "US Only",
+          "description": "Data must stay in United States"
+        },
+        {
+          "id": "residency-eu",
+          "label": "EU Only",
+          "description": "Data must stay in European Union"
+        },
+        {
+          "id": "residency-specific",
+          "label": "Specific Regions",
+          "description": "Choose where data is stored"
+        },
+        {
+          "id": "residency-global",
+          "label": "Global / Any",
+          "description": "Data can be stored anywhere"
+        },
+        {
+          "id": "residency-notimportant",
+          "label": "Not Important",
+          "description": "Data location doesn't matter to me"
+        }
+      ]
+    },
+    {
+      "id": "incident-response",
+      "question": "What incident response capabilities do you need?",
+      "category": "Security",
+      "multipleSelect": true,
+      "options": [
+        {
+          "id": "incident-breach",
+          "label": "Breach Notification",
+          "description": "Timely notification of security incidents"
+        },
+        {
+          "id": "incident-reports",
+          "label": "Incident Reports",
+          "description": "Regular security status updates"
+        },
+        {
+          "id": "incident-sla",
+          "label": "SLA Guarantees",
+          "description": "Uptime and response time commitments"
+        },
+        {
+          "id": "incident-notimportant",
+          "label": "Not Important",
+          "description": "Incident response doesn't matter to me"
+        }
+      ]
+    },
+    {
+      "id": "data-portability",
+      "question": "How important is data export capability?",
+      "category": "User Rights",
+      "multipleSelect": true,
+      "options": [
+        {
+          "id": "portability-self",
+          "label": "Self-service Export",
+          "description": "Download your data anytime"
+        },
+        {
+          "id": "portability-api",
+          "label": "API Export",
+          "description": "Programmatic data export"
+        },
+        {
+          "id": "portability-request",
+          "label": "On Request",
+          "description": "Must request data export"
+        },
+        {
+          "id": "portability-notimportant",
+          "label": "Not Important",
+          "description": "Data portability doesn't matter to me"
+        }
+      ]
     }
   ],
   "llms": [

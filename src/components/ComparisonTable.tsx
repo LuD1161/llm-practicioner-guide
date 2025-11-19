@@ -115,6 +115,37 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
                 return tags.join(', ') || '-';
             })],
 
+            // Data Residency
+            [{ content: 'DATA LOCATION', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Data Residency', ...selectedModels.map(m => {
+                const tags = [];
+                if (m.scores?.['residency-us'] === 10) tags.push('US');
+                if (m.scores?.['residency-eu'] === 10) tags.push('EU');
+                if (m.scores?.['residency-specific'] === 10) tags.push('Specific Regions');
+                if (m.scores?.['residency-global'] === 10) tags.push('Global');
+                return tags.join(', ') || '-';
+            })],
+
+            // Incident Response
+            [{ content: 'INCIDENT RESPONSE', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Response Capabilities', ...selectedModels.map(m => {
+                const tags = [];
+                if (m.scores?.['incident-breach'] === 10) tags.push('Breach Notification');
+                if (m.scores?.['incident-reports'] === 10) tags.push('Reports');
+                if (m.scores?.['incident-sla'] === 10) tags.push('SLA');
+                return tags.join(', ') || '-';
+            })],
+
+            // Data Portability
+            [{ content: 'DATA PORTABILITY', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Export Capabilities', ...selectedModels.map(m => {
+                const tags = [];
+                if (m.scores?.['portability-self'] === 10) tags.push('Self-service');
+                if (m.scores?.['portability-api'] === 10) tags.push('API');
+                if (m.scores?.['portability-request'] === 10) tags.push('On Request');
+                return tags.join(', ') || '-';
+            })],
+
             // Strengths Section
             [{ content: 'KEY STRENGTHS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
             ['Highlights', ...selectedModels.map(m => m.strengths.join('\n• '))],
@@ -327,6 +358,67 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
                                         {m.scores?.['trans-subproc'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">Subprocessors</span>}
                                         {m.scores?.['trans-sharing'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700">No Ad Sharing</span>}
                                         {m.scores?.['trans-notify'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">Policy Notices</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Data Residency */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Data Location
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Data Residency</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['residency-us'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">US</span>}
+                                        {m.scores?.['residency-eu'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700">EU</span>}
+                                        {m.scores?.['residency-specific'] === 10 && <span className="text-xs bg-purple-100 px-2 py-0.5 rounded text-purple-700">Specific Regions</span>}
+                                        {m.scores?.['residency-global'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">Global</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Incident Response */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Incident Response
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Response Capabilities</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['incident-breach'] === 10 && <span className="text-xs bg-rose-100 px-2 py-0.5 rounded text-rose-700">Breach Notification</span>}
+                                        {m.scores?.['incident-reports'] === 10 && <span className="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-700">Reports</span>}
+                                        {m.scores?.['incident-sla'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">SLA</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Data Portability */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Data Portability
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Export Capabilities</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['portability-self'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700">Self-service</span>}
+                                        {m.scores?.['portability-api'] === 10 && <span className="text-xs bg-indigo-100 px-2 py-0.5 rounded text-indigo-700">API</span>}
+                                        {m.scores?.['portability-request'] === 10 && <span className="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-700">On Request</span>}
                                     </div>
                                 </td>
                             ))}

@@ -1,16 +1,13 @@
 import { useState } from 'react';
 import { ScoredLLM } from '../utils/scoring';
-import { LLM, Question } from '../types/quiz';
-import { Plus, X, Check, Minus, Download, FileText, Shield, AlertTriangle } from 'lucide-react';
+import { Plus, X, Check, Download, FileText } from 'lucide-react';
 import PolicyModal from './PolicyModal';
 
 interface ComparisonTableProps {
     results: ScoredLLM[];
-    allLLMs: LLM[];
-    questions: Question[];
 }
 
-export default function ComparisonTable({ results, allLLMs, questions }: ComparisonTableProps) {
+export default function ComparisonTable({ results }: ComparisonTableProps) {
     // Initialize with top 3 models
     const [selectedModelIds, setSelectedModelIds] = useState<string[]>(() =>
         results.slice(0, 3).map(r => r.id)
@@ -35,8 +32,54 @@ export default function ComparisonTable({ results, allLLMs, questions }: Compari
         setSelectedModelIds(selectedModelIds.filter(mid => mid !== id));
     };
 
-    const handleExport = () => {
-        window.print();
+    const handleExport = async () => {
+        // Dynamically import jspdf to avoid SSR issues if any, and keep bundle size optimized
+        const jsPDF = (await import('jspdf')).default;
+        const autoTable = (await import('jspdf-autotable')).default;
+
+        const doc = new jsPDF();
+
+        // Add Title
+        doc.setFontSize(20);
+        doc.text("LLM Selection Guide - Comparison Report", 14, 22);
+
+        doc.setFontSize(10);
+        doc.text(`Generated on ${new Date().toLocaleDateString()}`, 14, 30);
+
+        // Prepare table data
+        const tableHead = [['Feature', ...selectedModels.map(m => m.name)]];
+
+        const tableBody = [
+            // Privacy Section
+            [{ content: 'PRIVACY & COMPLIANCE', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['No Training on Data', ...selectedModels.map(m => m.privacyFeatures?.noTraining === true ? 'Yes' : 'No')],
+            ['GDPR Compliant', ...selectedModels.map(m => m.privacyFeatures?.gdprCompliant === true ? 'Yes' : 'No')],
+            ['SOC 2 Certified', ...selectedModels.map(m => m.privacyFeatures?.soc2 === true ? 'Yes' : 'No')],
+            ['Data Residency', ...selectedModels.map(m => m.privacyFeatures?.dataResidency?.join(', ') || '-')],
+
+            // Strengths Section
+            [{ content: 'KEY STRENGTHS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Highlights', ...selectedModels.map(m => m.strengths.join('\n• '))],
+
+            // Policy Section
+            [{ content: 'DOCUMENTATION', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Policy References', ...selectedModels.map(m => m.policyReferences?.map(r => r.feature).join('\n') || 'None')]
+        ];
+
+        // Generate table
+        autoTable(doc, {
+            startY: 40,
+            head: tableHead,
+            body: tableBody,
+            theme: 'grid',
+            headStyles: { fillColor: [15, 23, 42] as [number, number, number], textColor: 255 },
+            styles: { fontSize: 9, cellPadding: 3 },
+            columnStyles: {
+                0: { fontStyle: 'bold', cellWidth: 40 }
+            }
+        });
+
+        doc.save('llm-comparison-report.pdf');
     };
 
     // Helper to get privacy feature value safely

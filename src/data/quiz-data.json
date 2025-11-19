@@ -4,6 +4,7 @@
       "id": 1,
       "question": "Can the LLM provider train on your data?",
       "multipleSelect": false,
+      "category": "Privacy",
       "options": [
         {
           "id": "no-training-guaranteed",
@@ -35,6 +36,7 @@
       "id": 2,
       "question": "What type of data will you be processing?",
       "multipleSelect": true,
+      "category": "Data Sensitivity",
       "options": [
         {
           "id": "data-public",
@@ -66,6 +68,7 @@
       "id": 3,
       "question": "What compliance certifications do you need?",
       "multipleSelect": true,
+      "category": "Compliance",
       "options": [
         {
           "id": "compliance-none",
@@ -97,6 +100,7 @@
       "id": 4,
       "question": "What is your organization's risk tolerance?",
       "multipleSelect": false,
+      "category": "Risk Assessment",
       "options": [
         {
           "id": "risk-zero",
@@ -131,7 +135,27 @@
       "name": "Azure OpenAI Service",
       "provider": "Microsoft",
       "description": "Enterprise-grade OpenAI models with Microsoft's compliance guarantees and data protection",
-      "strengths": ["No training on customer data", "HIPAA/BAA available", "Enterprise compliance", "Data residency options"],
+      "strengths": [
+        "No training on customer data",
+        "HIPAA/BAA available",
+        "Enterprise compliance",
+        "Data residency options"
+      ],
+      "privacyFeatures": {
+        "noTraining": true,
+        "baaAvailable": true,
+        "gdprCompliant": true,
+        "hipaaCompliant": true,
+        "soc2": true,
+        "dataResidency": [
+          "US",
+          "EU",
+          "UK"
+        ],
+        "zeroRetention": "Optional (30-day default)",
+        "auditLogs": true,
+        "deletionApi": true
+      },
       "policyReferences": [
         {
           "feature": "No Training on Data",
@@ -186,7 +210,25 @@
       "name": "Claude API",
       "provider": "Anthropic",
       "description": "Privacy-focused AI assistant with strong commitments to not training on user data",
-      "strengths": ["No training on conversations", "SOC 2 Type 2", "Privacy-first design", "Transparent policies"],
+      "strengths": [
+        "No training on conversations",
+        "SOC 2 Type 2",
+        "Privacy-first design",
+        "Transparent policies"
+      ],
+      "privacyFeatures": {
+        "noTraining": true,
+        "baaAvailable": false,
+        "gdprCompliant": true,
+        "hipaaCompliant": false,
+        "soc2": true,
+        "dataResidency": [
+          "US"
+        ],
+        "zeroRetention": "30 days for abuse monitoring",
+        "auditLogs": "Basic",
+        "deletionApi": false
+      },
       "policyReferences": [
         {
           "feature": "No Training on Data",
@@ -241,7 +283,25 @@
       "name": "OpenAI API",
       "provider": "OpenAI",
       "description": "Powerful GPT models with opt-out from training, suitable for most commercial applications",
-      "strengths": ["Opt-out from training", "Enterprise tier available", "Advanced models", "Widespread adoption"],
+      "strengths": [
+        "Opt-out from training",
+        "Enterprise tier available",
+        "Advanced models",
+        "Widespread adoption"
+      ],
+      "privacyFeatures": {
+        "noTraining": true,
+        "baaAvailable": false,
+        "gdprCompliant": true,
+        "hipaaCompliant": false,
+        "soc2": true,
+        "dataResidency": [
+          "US"
+        ],
+        "zeroRetention": "30 days",
+        "auditLogs": false,
+        "deletionApi": true
+      },
       "policyReferences": [
         {
           "feature": "Training on Data (Opt-Out)",
@@ -296,7 +356,25 @@
       "name": "Llama 3 (Self-Hosted)",
       "provider": "Meta (Open Source)",
       "description": "Open-source model you can run on your own infrastructure with complete data control",
-      "strengths": ["Complete data control", "No external data transfer", "Free to use", "Highly customizable"],
+      "strengths": [
+        "Complete data control",
+        "No external data transfer",
+        "Free to use",
+        "Highly customizable"
+      ],
+      "privacyFeatures": {
+        "noTraining": true,
+        "baaAvailable": "N/A (self-hosted)",
+        "gdprCompliant": "Self-managed",
+        "hipaaCompliant": "Self-managed",
+        "soc2": "N/A",
+        "dataResidency": [
+          "Your infrastructure"
+        ],
+        "zeroRetention": "Full control",
+        "auditLogs": "Self-implemented",
+        "deletionApi": "Self-managed"
+      },
       "policyReferences": [
         {
           "feature": "Complete Data Control",
@@ -344,7 +422,27 @@
       "name": "Google Gemini API",
       "provider": "Google",
       "description": "Google's multimodal AI with enterprise features and Google Cloud compliance",
-      "strengths": ["Multimodal capabilities", "Google Cloud compliance", "Enterprise features", "Data residency options"],
+      "strengths": [
+        "Multimodal capabilities",
+        "Google Cloud compliance",
+        "Enterprise features",
+        "Data residency options"
+      ],
+      "privacyFeatures": {
+        "noTraining": true,
+        "baaAvailable": true,
+        "gdprCompliant": true,
+        "hipaaCompliant": true,
+        "soc2": true,
+        "dataResidency": [
+          "US",
+          "EU",
+          "Asia"
+        ],
+        "zeroRetention": "Configurable",
+        "auditLogs": true,
+        "deletionApi": true
+      },
       "policyReferences": [
         {
           "feature": "Training on Data",

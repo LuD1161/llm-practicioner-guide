@@ -26,7 +26,7 @@ export default function OptionCard({ icon, label, description, selected, onClick
           ? 'border-slate-900 bg-slate-50 shadow-lg scale-[1.02]'
           : 'border-slate-200 bg-white hover:border-slate-400 hover:shadow-md hover:scale-[1.01]'
         }
-        ${isFocused ? 'ring-4 ring-slate-300' : ''}
+        ${isFocused ? '' : ''}
       `}
     >
       <div className="flex flex-col items-center text-center space-y-3">

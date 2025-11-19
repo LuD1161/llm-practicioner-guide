@@ -22,8 +22,8 @@ export default function Results({
   allLLMs
 }: ResultsProps) {
   return (
-    <div className="w-full max-w-7xl mx-auto animate-fade-in">
-      <div className="flex justify-between items-center mb-8">
+    <div className="w-full max-w-7xl mx-auto animate-fade-in h-full flex flex-col">
+      <div className="flex justify-between items-center mb-8 shrink-0">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">
             Analysis & Recommendations
@@ -41,9 +41,9 @@ export default function Results({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-200px)] min-h-[600px]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
         {/* Left Sidebar - Configuration */}
-        <div className="lg:col-span-3 h-full">
+        <div className="lg:col-span-3 h-full overflow-hidden">
           <QuestionConfigurator
             questions={allQuestions}
             userAnswers={userAnswers}
@@ -55,8 +55,6 @@ export default function Results({
         <div className="lg:col-span-9 h-full overflow-hidden flex flex-col">
           <ComparisonTable
             results={results}
-            allLLMs={allLLMs}
-            questions={allQuestions}
           />
         </div>
       </div>

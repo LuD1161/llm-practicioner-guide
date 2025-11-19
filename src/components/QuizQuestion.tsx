@@ -21,14 +21,41 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
 
   const handleSelect = useCallback((optionId: string) => {
     if (isMultiple) {
-      const newSelection = isSelected(optionId)
-        ? selectedArray.filter(id => id !== optionId)
-        : [...selectedArray, optionId];
-      onSelectOption(newSelection);
+      // Define options that should be mutually exclusive
+      const exclusiveOptions = ['compliance-none', 'data-public'];
+      const exclusiveOptionId = exclusiveOptions.find(id =>
+        question.options.some(opt => opt.id === id)
+      );
+
+      if (exclusiveOptionId) {
+        if (optionId === exclusiveOptionId) {
+          // If selecting the exclusive option, clear everything else. 
+          // If deselecting it, just clear it.
+          const newSelection = isSelected(optionId) ? [] : [exclusiveOptionId];
+          onSelectOption(newSelection);
+        } else {
+          // If selecting any other option, remove the exclusive option if it's there
+          const newSelection = isSelected(optionId)
+            ? selectedArray.filter(id => id !== optionId)
+            : [...selectedArray.filter(id => id !== exclusiveOptionId), optionId];
+          onSelectOption(newSelection);
+        }
+      } else {
+        // Standard multiple select behavior
+        const newSelection = isSelected(optionId)
+          ? selectedArray.filter(id => id !== optionId)
+          : [...selectedArray, optionId];
+        onSelectOption(newSelection);
+      }
     } else {
-      onSelectOption(optionId);
+      // Allow unselecting even for single select
+      if (isSelected(optionId)) {
+        onSelectOption([]); // Clear selection
+      } else {
+        onSelectOption(optionId);
+      }
     }
-  }, [isMultiple, isSelected, selectedArray, onSelectOption]);
+  }, [isMultiple, isSelected, selectedArray, onSelectOption, question.options]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent, optionId: string, index: number) => {
     if (e.key === 'Enter' || e.key === ' ') {

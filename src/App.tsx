@@ -104,17 +104,21 @@ function App() {
 
   if (showResults) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
-        <Results
-          results={results}
-          onRestart={handleRestart}
-          userAnswers={userAnswers}
-          onUpdateAnswer={(qId, val) => handleSelectOption(val, qId)}
-          allQuestions={data.questions}
-          allLLMs={data.llms}
-        />
+      <div className="h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-hidden w-full">
+          <div className="h-full py-8 px-4 overflow-hidden">
+            <Results
+              results={results}
+              onRestart={handleRestart}
+              userAnswers={userAnswers}
+              onUpdateAnswer={(qId, val) => handleSelectOption(val, qId)}
+              allQuestions={data.questions}
+              allLLMs={data.llms}
+            />
+          </div>
+        </div>
 
-        <div className="mt-8 pt-8 border-t border-slate-200 text-center">
+        <div className="shrink-0 py-4 border-t border-slate-200 text-center bg-slate-50/80 backdrop-blur-sm">
           <p className="text-sm text-slate-500">
             Developed by CMU Privacy Engineering
           </p>
@@ -132,8 +136,8 @@ function App() {
         onQuestionClick={setCurrentQuestionIndex}
       />
 
-      <div className="flex-1 py-8 px-4 overflow-y-auto">
-        <div className="max-w-4xl mx-auto">
+      <div className="flex-1 py-8 px-4 overflow-y-auto flex flex-col">
+        <div className="max-w-4xl mx-auto w-full flex-1 flex flex-col">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-6">
               <Brain className="text-slate-900" size={32} />
@@ -149,7 +153,7 @@ function App() {
             />
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-8">
             <button
               onClick={handlePrevious}
               disabled={currentQuestionIndex === 0}
@@ -179,7 +183,7 @@ function App() {
             </button>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-slate-200 text-center">
+          <div className="mt-auto pt-8 border-t border-slate-200 text-center">
             <p className="text-sm text-slate-500">
               Developed by CMU Privacy Engineering
             </p>

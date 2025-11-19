@@ -13,20 +13,29 @@ export default function QuestionConfigurator({
     userAnswers,
     onUpdateAnswer,
 }: QuestionConfiguratorProps) {
-    const [expandedCategory, setExpandedCategory] = React.useState<string | null>(null);
-
     // Group questions by category
-    const questionsByCategory = questions.reduce((acc, question) => {
+    const questionsByCategory = React.useMemo(() => questions.reduce((acc, question) => {
         const category = question.category || 'Other';
         if (!acc[category]) {
             acc[category] = [];
         }
         acc[category].push(question);
         return acc;
-    }, {} as Record<string, Question[]>);
+    }, {} as Record<string, Question[]>), [questions]);
+
+    const [expandedCategories, setExpandedCategories] = React.useState<string[]>([]);
+
+    // Initialize with all categories expanded
+    React.useEffect(() => {
+        setExpandedCategories(Object.keys(questionsByCategory));
+    }, [questionsByCategory]);
 
     const toggleCategory = (category: string) => {
-        setExpandedCategory(expandedCategory === category ? null : category);
+        setExpandedCategories(prev =>
+            prev.includes(category)
+                ? prev.filter(c => c !== category)
+                : [...prev, category]
+        );
     };
 
     return (
@@ -46,14 +55,14 @@ export default function QuestionConfigurator({
                             className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors text-left"
                         >
                             <span className="font-medium text-sm text-slate-700">{category}</span>
-                            {expandedCategory === category ? (
+                            {expandedCategories.includes(category) ? (
                                 <ChevronUp size={16} className="text-slate-500" />
                             ) : (
                                 <ChevronDown size={16} className="text-slate-500" />
                             )}
                         </button>
 
-                        {expandedCategory === category && (
+                        {expandedCategories.includes(category) && (
                             <div className="mt-2 space-y-4 pl-2 pr-1 pb-2">
                                 {categoryQuestions.map((question) => (
                                     <div key={question.id} className="text-sm">
@@ -72,9 +81,36 @@ export default function QuestionConfigurator({
                                                         onClick={() => {
                                                             if (question.multipleSelect) {
                                                                 const current = (userAnswers[question.id] as string[]) || [];
-                                                                const newValue = current.includes(option.id)
-                                                                    ? current.filter((id) => id !== option.id)
-                                                                    : [...current, option.id];
+                                                                const exclusiveOptions = ['compliance-none', 'data-public'];
+                                                                const exclusiveOptionId = exclusiveOptions.find(id =>
+                                                                    question.options.some(opt => opt.id === id)
+                                                                );
+
+                                                                let newValue: string[];
+
+                                                                if (exclusiveOptionId) {
+                                                                    if (option.id === exclusiveOptionId) {
+                                                                        // If clicking exclusive option, clear others if selecting, or just deselect if already selected
+                                                                        newValue = current.includes(exclusiveOptionId)
+                                                                            ? []
+                                                                            : [exclusiveOptionId];
+                                                                    } else {
+                                                                        // If clicking other option
+                                                                        if (current.includes(option.id)) {
+                                                                            // Deselecting
+                                                                            newValue = current.filter(id => id !== option.id);
+                                                                        } else {
+                                                                            // Selecting - remove exclusive option if present
+                                                                            newValue = [...current.filter(id => id !== exclusiveOptionId), option.id];
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    // Standard multiple select behavior
+                                                                    newValue = current.includes(option.id)
+                                                                        ? current.filter((id) => id !== option.id)
+                                                                        : [...current, option.id];
+                                                                }
+
                                                                 onUpdateAnswer(question.id, newValue);
                                                             } else {
                                                                 onUpdateAnswer(question.id, option.id);

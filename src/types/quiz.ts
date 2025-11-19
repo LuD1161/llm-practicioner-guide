@@ -9,6 +9,7 @@ export interface Question {
   id: number;
   question: string;
   multipleSelect: boolean;
+  category?: string;
   options: Option[];
 }
 
@@ -26,6 +27,18 @@ export interface LLM {
   provider: string;
   description: string;
   strengths: string[];
+  privacyFeatures?: {
+    noTraining: boolean | string;
+    baaAvailable: boolean | string;
+    gdprCompliant: boolean | string;
+    hipaaCompliant: boolean | string;
+    soc2: boolean | string;
+    dataResidency: string[];
+    zeroRetention: string;
+    auditLogs: boolean | string;
+    deletionApi: boolean | string;
+    [key: string]: any;
+  };
   policyReferences?: PolicyReference[];
   scores: Record<string, number>;
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ScoredLLM } from '../utils/scoring';
-import { Plus, X, Check, Download, FileText } from 'lucide-react';
+import { Plus, X, Check, Download, FileText, Info } from 'lucide-react';
 import PolicyModal from './PolicyModal';
 
 interface ComparisonTableProps {
@@ -123,9 +123,18 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
                                         </button>
                                         <h3 className="font-bold text-slate-900 text-lg">{model.name}</h3>
                                         <span className="text-xs text-slate-500 mb-2">{model.provider}</span>
-                                        <div className="flex items-center gap-2 mb-2">
+                                        <div className="flex items-center gap-2 mb-2 relative group/tooltip cursor-help">
                                             <div className="text-2xl font-bold text-slate-900">{Math.round(model.matchPercentage)}%</div>
-                                            <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Match</span>
+                                            <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                Match
+                                                <Info size={12} className="text-emerald-600" />
+                                            </span>
+
+                                            {/* Tooltip */}
+                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 text-center font-normal shadow-xl pointer-events-none">
+                                                Based on your configured requirements. Higher % means better alignment with your needs.
+                                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
+                                            </div>
                                         </div>
                                         <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                                             <div

@@ -197,7 +197,7 @@
       "id": "data-residency",
       "question": "Where can your data be stored?",
       "category": "Data Location",
-      "multipleSelect": true,
+      "multipleSelect": false,
       "options": [
         {
           "id": "residency-us",

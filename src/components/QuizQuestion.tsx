@@ -21,32 +21,34 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
 
   const handleSelect = useCallback((optionId: string) => {
     if (isMultiple) {
-      // Define options that should be mutually exclusive
-      const exclusiveOptions = ['compliance-none', 'data-public'];
-      const exclusiveOptionId = exclusiveOptions.find(id =>
-        question.options.some(opt => opt.id === id)
-      );
+      const current = selectedArray;
 
-      if (exclusiveOptionId) {
-        if (optionId === exclusiveOptionId) {
-          // If selecting the exclusive option, clear everything else. 
-          // If deselecting it, just clear it.
-          const newSelection = isSelected(optionId) ? [] : [exclusiveOptionId];
-          onSelectOption(newSelection);
+      // Check if this option is a "Not Important" option
+      const isNotImportant = optionId.endsWith('-notimportant');
+
+      let newSelection: string[];
+
+      if (isNotImportant) {
+        // If clicking "Not Important"
+        if (current.includes(optionId)) {
+          // Deselecting "Not Important"
+          newSelection = [];
         } else {
-          // If selecting any other option, remove the exclusive option if it's there
-          const newSelection = isSelected(optionId)
-            ? selectedArray.filter(id => id !== optionId)
-            : [...selectedArray.filter(id => id !== exclusiveOptionId), optionId];
-          onSelectOption(newSelection);
+          // Selecting "Not Important" - clear all other options
+          newSelection = [optionId];
         }
       } else {
-        // Standard multiple select behavior
-        const newSelection = isSelected(optionId)
-          ? selectedArray.filter(id => id !== optionId)
-          : [...selectedArray, optionId];
-        onSelectOption(newSelection);
+        // If clicking a regular option
+        if (current.includes(optionId)) {
+          // Deselecting
+          newSelection = current.filter(id => id !== optionId);
+        } else {
+          // Selecting - remove "Not Important" if present and add this option
+          newSelection = [...current.filter(id => !id.endsWith('-notimportant')), optionId];
+        }
       }
+
+      onSelectOption(newSelection);
     } else {
       // Allow unselecting even for single select
       if (isSelected(optionId)) {
@@ -55,7 +57,7 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
         onSelectOption(optionId);
       }
     }
-  }, [isMultiple, isSelected, selectedArray, onSelectOption, question.options]);
+  }, [isMultiple, isSelected, selectedArray, onSelectOption]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent, optionId: string, index: number) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -79,16 +81,20 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
 
   return (
     <div className="w-full max-w-4xl mx-auto animate-fade-in">
-      <h2 className="text-3xl font-bold text-slate-900 mb-4 text-center">
-        {question.question}
-      </h2>
-
-      {isMultiple && (
-        <div className="flex items-center justify-center gap-2 mb-8 text-slate-600">
-          <Info size={16} />
-          <p className="text-sm">You can select multiple options</p>
+      <div className="text-center mb-8">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <h2 className="text-3xl font-bold text-slate-900">
+            {question.question}
+          </h2>
         </div>
-      )}
+
+        {isMultiple && (
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg text-blue-700">
+            <Info size={16} className="flex-shrink-0" />
+            <p className="text-sm font-medium">You can select multiple options</p>
+          </div>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {question.options.map((option, index) => (
@@ -105,10 +111,6 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
             />
           </div>
         ))}
-      </div>
-
-      <div className="mt-6 text-center text-sm text-slate-500">
-        Use arrow keys to navigate, Space or Enter to select
       </div>
     </div>
   );

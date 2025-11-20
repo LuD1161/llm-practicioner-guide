@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { ScoredLLM } from '../utils/scoring';
-import { Plus, X, Check, Download, FileText } from 'lucide-react';
+import { Plus, X, Check, Download, FileText, Info } from 'lucide-react';
 import PolicyModal from './PolicyModal';
+import { Question, UserAnswers } from '../types/quiz';
 
 interface ComparisonTableProps {
     results: ScoredLLM[];
+    questions?: Question[];
+    userAnswers?: UserAnswers;
 }
 
-export default function ComparisonTable({ results }: ComparisonTableProps) {
+export default function ComparisonTable({ results, questions, userAnswers }: ComparisonTableProps) {
     // Initialize with top 3 models
     const [selectedModelIds, setSelectedModelIds] = useState<string[]>(() =>
         results.slice(0, 3).map(r => r.id)
@@ -33,62 +36,316 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
     };
 
     const handleExport = async () => {
-        // Dynamically import jspdf to avoid SSR issues if any, and keep bundle size optimized
         const jsPDF = (await import('jspdf')).default;
         const autoTable = (await import('jspdf-autotable')).default;
 
         const doc = new jsPDF();
 
-        // Add Title
+        // Color mapping for badges (RGB values matching tailwind colors)
+        const badgeColors: Record<string, { bg: [number, number, number], text: [number, number, number] }> = {
+            'No Training': { bg: [209, 250, 229], text: [4, 120, 87] },      // emerald
+            'Opt-out': { bg: [219, 234, 254], text: [29, 78, 216] },         // blue
+            'Anonymized': { bg: [254, 243, 199], text: [180, 83, 9] },       // amber
+            'Allowed': { bg: [241, 245, 249], text: [51, 65, 85] },          // slate
+            'PII': { bg: [241, 245, 249], text: [51, 65, 85] },              // slate
+            'Sensitive': { bg: [255, 228, 230], text: [190, 18, 60] },       // rose
+            'Minors': { bg: [243, 232, 255], text: [107, 33, 168] },         // purple
+            'General': { bg: [209, 250, 229], text: [4, 120, 87] },          // emerald
+            'Encryption': { bg: [241, 245, 249], text: [51, 65, 85] },       // slate
+            'SSO': { bg: [219, 234, 254], text: [29, 78, 216] },             // blue
+            'MFA': { bg: [224, 231, 255], text: [67, 56, 202] },             // indigo
+            'Audit Logs': { bg: [237, 233, 254], text: [109, 40, 217] },     // violet
+            'DLP': { bg: [252, 231, 243], text: [190, 24, 93] },             // pink
+            'GDPR': { bg: [209, 250, 229], text: [4, 120, 87] },             // emerald
+            'CCPA': { bg: [219, 234, 254], text: [29, 78, 216] },            // blue
+            'HIPAA': { bg: [255, 228, 230], text: [190, 18, 60] },           // rose
+            'SOC 2': { bg: [224, 231, 255], text: [67, 56, 202] },           // indigo
+            'Delete': { bg: [255, 228, 230], text: [190, 18, 60] },          // rose
+            'Access': { bg: [219, 234, 254], text: [29, 78, 216] },          // blue
+            'Retention': { bg: [254, 243, 199], text: [180, 83, 9] },        // amber
+            'Subprocessors': { bg: [241, 245, 249], text: [51, 65, 85] },    // slate
+            'No Ad Sharing': { bg: [209, 250, 229], text: [4, 120, 87] },    // emerald
+            'Policy Notices': { bg: [219, 234, 254], text: [29, 78, 216] },  // blue
+            'US': { bg: [219, 234, 254], text: [29, 78, 216] },              // blue
+            'EU': { bg: [209, 250, 229], text: [4, 120, 87] },               // emerald
+            'Specific Regions': { bg: [243, 232, 255], text: [107, 33, 168] }, // purple
+            'Global': { bg: [241, 245, 249], text: [51, 65, 85] },           // slate
+            'Breach Notification': { bg: [255, 228, 230], text: [190, 18, 60] }, // rose
+            'Reports': { bg: [254, 243, 199], text: [180, 83, 9] },          // amber
+            'SLA': { bg: [219, 234, 254], text: [29, 78, 216] },             // blue
+            'Self-service': { bg: [209, 250, 229], text: [4, 120, 87] },     // emerald
+            'API': { bg: [224, 231, 255], text: [67, 56, 202] },             // indigo
+            'On Request': { bg: [254, 243, 199], text: [180, 83, 9] },       // amber
+        };
+
+        // Helper function to draw a badge
+        const drawBadge = (doc: any, text: string, x: number, y: number, colors: { bg: [number, number, number], text: [number, number, number] }) => {
+            const padding = 2;
+            const height = 4;
+            doc.setFontSize(7);
+            const width = doc.getTextWidth(text) + (padding * 2);
+
+            // Draw rounded rectangle background
+            doc.setFillColor(...colors.bg);
+            doc.roundedRect(x, y - height + 0.5, width, height, 0.5, 0.5, 'F');
+
+            // Draw text
+            doc.setTextColor(...colors.text);
+            doc.text(text, x + padding, y);
+
+            return width;
+        };
+
+        // PAGE 1: Comparison Table
         doc.setFontSize(20);
         doc.text("LLM Selection Guide - Comparison Report", 14, 22);
 
         doc.setFontSize(10);
         doc.text(`Generated on ${new Date().toLocaleDateString()}`, 14, 30);
 
-        // Prepare table data
+        // Build the table with tag data
         const tableHead = [['Feature', ...selectedModels.map(m => m.name)]];
 
-        const tableBody = [
-            // Privacy Section
-            [{ content: 'PRIVACY & COMPLIANCE', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['No Training on Data', ...selectedModels.map(m => m.privacyFeatures?.noTraining === true ? 'Yes' : 'No')],
-            ['GDPR Compliant', ...selectedModels.map(m => m.privacyFeatures?.gdprCompliant === true ? 'Yes' : 'No')],
-            ['SOC 2 Certified', ...selectedModels.map(m => m.privacyFeatures?.soc2 === true ? 'Yes' : 'No')],
-            ['Data Residency', ...selectedModels.map(m => m.privacyFeatures?.dataResidency?.join(', ') || '-')],
+        // Store tag data separately for rendering
+        const tagData: Record<string, string[]> = {};
+        let rowIndex = 0;
 
-            // Strengths Section
+        const tableBody = [
+            // Training Policy
+            [{ content: 'TRAINING POLICY', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Model Training', ...selectedModels.map((m, colIndex) => {
+                const tags = [];
+                if (m.scores?.['train-none'] === 10) tags.push('No Training');
+                if (m.scores?.['train-opt-out'] === 10) tags.push('Opt-out');
+                if (m.scores?.['train-anon'] === 10) tags.push('Anonymized');
+                if (m.scores?.['train-allow'] === 10) tags.push('Allowed');
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-'; // Placeholder, we'll draw badges in didDrawCell
+            })],
+        ];
+        rowIndex += 2;
+
+        // Data Support
+        tableBody.push(
+            [{ content: 'DATA SUPPORT', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Supported Data Types', ...selectedModels.map((m, colIndex) => {
+                const tags = [];
+                if (m.scores?.['data-pii'] === 10) tags.push('PII');
+                if (m.scores?.['data-sensitive'] === 10) tags.push('Sensitive');
+                if (m.scores?.['data-minors'] === 10) tags.push('Minors');
+                if (m.scores?.['data-general'] === 10) tags.push('General');
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
+
+        // Security
+        tableBody.push(
+            [{ content: 'SECURITY FEATURES', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Available Features', ...selectedModels.map((m, colIndex) => {
+                const tags = [];
+                if (m.scores?.['sec-enc'] === 10) tags.push('Encryption');
+                if (m.scores?.['sec-sso'] === 10) tags.push('SSO');
+                if (m.scores?.['sec-mfa'] === 10) tags.push('MFA');
+                if (m.scores?.['sec-audit'] === 10) tags.push('Audit Logs');
+                if (m.scores?.['sec-dlp'] === 10) tags.push('DLP');
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
+
+        // Compliance
+        tableBody.push(
+            [{ content: 'COMPLIANCE & CERTIFICATIONS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Certifications', ...selectedModels.map((m, colIndex) => {
+                const tags = [];
+                if (m.scores?.['comp-gdpr'] === 10) tags.push('GDPR');
+                if (m.scores?.['comp-ccpa'] === 10) tags.push('CCPA');
+                if (m.scores?.['comp-hipaa'] === 10) tags.push('HIPAA');
+                if (m.scores?.['comp-soc2'] === 10) tags.push('SOC 2');
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
+
+        // User Rights
+        tableBody.push(
+            [{ content: 'USER RIGHTS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Available Rights', ...selectedModels.map((m, colIndex) => {
+                const tags = [];
+                if (m.scores?.['right-delete'] === 10) tags.push('Delete');
+                if (m.scores?.['right-access'] === 10) tags.push('Access');
+                if (m.scores?.['right-retention'] === 10) tags.push('Retention');
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
+
+        // Transparency
+        tableBody.push(
+            [{ content: 'TRANSPARENCY', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Transparency Features', ...selectedModels.map((m, colIndex) => {
+                const tags = [];
+                if (m.scores?.['trans-subproc'] === 10) tags.push('Subprocessors');
+                if (m.scores?.['trans-sharing'] === 10) tags.push('No Ad Sharing');
+                if (m.scores?.['trans-notify'] === 10) tags.push('Policy Notices');
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
+
+        // Data Residency
+        tableBody.push(
+            [{ content: 'DATA LOCATION', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Data Residency', ...selectedModels.map((m, colIndex) => {
+                const tags = [];
+                if (m.scores?.['residency-us'] === 10) tags.push('US');
+                if (m.scores?.['residency-eu'] === 10) tags.push('EU');
+                if (m.scores?.['residency-specific'] === 10) tags.push('Specific Regions');
+                if (m.scores?.['residency-global'] === 10) tags.push('Global');
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
+
+        // Incident Response
+        tableBody.push(
+            [{ content: 'INCIDENT RESPONSE', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Response Capabilities', ...selectedModels.map((m, colIndex) => {
+                const tags = [];
+                if (m.scores?.['incident-breach'] === 10) tags.push('Breach Notification');
+                if (m.scores?.['incident-reports'] === 10) tags.push('Reports');
+                if (m.scores?.['incident-sla'] === 10) tags.push('SLA');
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
+
+        // Data Portability
+        tableBody.push(
+            [{ content: 'DATA PORTABILITY', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
+            ['Export Capabilities', ...selectedModels.map((m, colIndex) => {
+                const tags = [];
+                if (m.scores?.['portability-self'] === 10) tags.push('Self-service');
+                if (m.scores?.['portability-api'] === 10) tags.push('API');
+                if (m.scores?.['portability-request'] === 10) tags.push('On Request');
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
+
+        // Strengths and Documentation (no badges needed)
+        tableBody.push(
             [{ content: 'KEY STRENGTHS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
             ['Highlights', ...selectedModels.map(m => m.strengths.join('\n• '))],
-
-            // Policy Section
             [{ content: 'DOCUMENTATION', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
             ['Policy References', ...selectedModels.map(m => m.policyReferences?.map(r => r.feature).join('\n') || 'None')]
-        ];
+        );
 
-        // Generate table
+        // Generate table with custom cell rendering for badges
         autoTable(doc, {
             startY: 40,
             head: tableHead,
             body: tableBody,
             theme: 'grid',
             headStyles: { fillColor: [15, 23, 42] as [number, number, number], textColor: 255 },
-            styles: { fontSize: 9, cellPadding: 3 },
+            styles: { fontSize: 9, cellPadding: 3, minCellHeight: 10 },
             columnStyles: {
                 0: { fontStyle: 'bold', cellWidth: 40 }
+            },
+            didDrawCell: (data) => {
+                // Draw badges for data cells (not header or label cells)
+                if (data.section === 'body' && data.column.index > 0) {
+                    const key = `${data.row.index}-${data.column.index}`;
+                    const tags = tagData[key];
+
+                    if (tags && tags.length > 0) {
+                        const cellWidth = data.cell.width - 4;
+                        const startX = data.cell.x + 2;
+                        const startY = data.cell.y + 4;
+
+                        let xOffset = startX;
+                        let yOffset = startY;
+                        let currentLineWidth = 0;
+
+                        tags.forEach((tag, tagIndex) => {
+                            const colors = badgeColors[tag] || { bg: [241, 245, 249], text: [51, 65, 85] };
+                            doc.setFontSize(7);
+                            const badgeWidth = doc.getTextWidth(tag) + 4;
+
+                            // Check if we need to wrap to next line
+                            if (currentLineWidth + badgeWidth > cellWidth && currentLineWidth > 0) {
+                                currentLineWidth = 0;
+                                xOffset = startX;
+                                yOffset += 6;  // Move to next line
+                            }
+
+                            // Draw the badge
+                            const width = drawBadge(doc, tag, xOffset, yOffset, colors);
+                            xOffset += width + 2;  // Add gap between badges
+                            currentLineWidth += badgeWidth + 2;
+                        });
+
+                        // Reset text color
+                        doc.setTextColor(0, 0, 0);
+                    }
+                }
             }
         });
 
-        doc.save('llm-comparison-report.pdf');
-    };
+        // PAGE 2: Questions and Answers
+        if (questions && userAnswers) {
+            doc.addPage();
+            doc.setFontSize(16);
+            doc.text("Quiz Questions & Your Answers", 14, 20);
 
-    // Helper to get privacy feature value safely
-    const getPrivacyFeature = (model: ScoredLLM, key: string) => {
-        // @ts-ignore - dynamic access to privacyFeatures
-        const val = model.privacyFeatures?.[key];
-        if (val === true) return <Check size={16} className="text-emerald-500 mx-auto" />;
-        if (val === false) return <X size={16} className="text-rose-500 mx-auto" />;
-        return <span className="text-sm text-slate-600">{val}</span>;
+            let yPosition = 30;
+
+            questions.forEach((question, index) => {
+                // Check if we need a new page
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+
+                // Question
+                doc.setFontSize(11);
+                doc.setFont('', 'bold');
+                doc.text(`Q${index + 1}: ${question.question}`, 14, yPosition);
+                yPosition += 7;
+
+                // Selected answer(s)
+                const answer = userAnswers[question.id];
+                if (answer) {
+                    doc.setFont('', 'normal');
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 100, 0);
+
+                    const answerIds = Array.isArray(answer) ? answer : [answer];
+                    answerIds.forEach(answerId => {
+                        const option = question.options.find(o => o.id === answerId);
+                        if (option) {
+                            doc.text(`✓ ${option.label}`, 20, yPosition);
+                            yPosition += 6;
+                        }
+                    });
+
+                    doc.setTextColor(0, 0, 0);
+                }
+
+                yPosition += 5;
+            });
+        }
+
+        doc.save('llm-comparison-report.pdf');
     };
 
     return (
@@ -123,9 +380,18 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
                                         </button>
                                         <h3 className="font-bold text-slate-900 text-lg">{model.name}</h3>
                                         <span className="text-xs text-slate-500 mb-2">{model.provider}</span>
-                                        <div className="flex items-center gap-2 mb-2">
+                                        <div className="flex items-center gap-2 mb-2 relative group/tooltip cursor-help">
                                             <div className="text-2xl font-bold text-slate-900">{Math.round(model.matchPercentage)}%</div>
-                                            <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Match</span>
+                                            <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                Match
+                                                <Info size={12} className="text-emerald-600" />
+                                            </span>
+
+                                            {/* Tooltip */}
+                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 text-center font-normal shadow-xl pointer-events-none">
+                                                Based on your configured requirements. Higher % means better alignment with your needs.
+                                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
+                                            </div>
                                         </div>
                                         <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                                             <div
@@ -150,48 +416,186 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
-                        {/* Privacy & Compliance Section */}
+                        {/* Training Policy */}
                         <tr className="bg-slate-50/50">
                             <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
-                                Privacy & Compliance
+                                Training Policy
                             </td>
                         </tr>
                         <tr>
-                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">No Training on Data</td>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Model Training</td>
                             {selectedModels.map(m => (
-                                <td key={m.id} className="p-4 text-center border-r border-slate-200">
-                                    {getPrivacyFeature(m, 'noTraining')}
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['train-none'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700 font-medium">No Training</span>}
+                                        {m.scores?.['train-opt-out'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700 font-medium">Opt-out</span>}
+                                        {m.scores?.['train-anon'] === 10 && <span className="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-700 font-medium">Anonymized</span>}
+                                        {m.scores?.['train-allow'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700 font-medium">Allowed</span>}
+                                    </div>
                                 </td>
                             ))}
                             {selectedModelIds.length < 4 && <td />}
                         </tr>
+
+                        {/* Data Sensitivity */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Data Support
+                            </td>
+                        </tr>
                         <tr>
-                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">GDPR Compliant</td>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Supported Data Types</td>
                             {selectedModels.map(m => (
-                                <td key={m.id} className="p-4 text-center border-r border-slate-200">
-                                    {getPrivacyFeature(m, 'gdprCompliant')}
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['data-pii'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">PII</span>}
+                                        {m.scores?.['data-sensitive'] === 10 && <span className="text-xs bg-rose-100 px-2 py-0.5 rounded text-rose-700">Sensitive</span>}
+                                        {m.scores?.['data-minors'] === 10 && <span className="text-xs bg-purple-100 px-2 py-0.5 rounded text-purple-700">Minors</span>}
+                                        {m.scores?.['data-general'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700">General</span>}
+                                    </div>
                                 </td>
                             ))}
                             {selectedModelIds.length < 4 && <td />}
                         </tr>
+
+                        {/* Security */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Security Features
+                            </td>
+                        </tr>
                         <tr>
-                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">SOC 2 Certified</td>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Available Features</td>
                             {selectedModels.map(m => (
-                                <td key={m.id} className="p-4 text-center border-r border-slate-200">
-                                    {getPrivacyFeature(m, 'soc2')}
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['sec-enc'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">Encryption</span>}
+                                        {m.scores?.['sec-sso'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">SSO</span>}
+                                        {m.scores?.['sec-mfa'] === 10 && <span className="text-xs bg-indigo-100 px-2 py-0.5 rounded text-indigo-700">MFA</span>}
+                                        {m.scores?.['sec-audit'] === 10 && <span className="text-xs bg-violet-100 px-2 py-0.5 rounded text-violet-700">Audit Logs</span>}
+                                        {m.scores?.['sec-dlp'] === 10 && <span className="text-xs bg-pink-100 px-2 py-0.5 rounded text-pink-700">DLP</span>}
+                                    </div>
                                 </td>
                             ))}
                             {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Compliance */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Compliance & Certifications
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Certifications</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['comp-gdpr'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700 font-medium">GDPR</span>}
+                                        {m.scores?.['comp-ccpa'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700 font-medium">CCPA</span>}
+                                        {m.scores?.['comp-hipaa'] === 10 && <span className="text-xs bg-rose-100 px-2 py-0.5 rounded text-rose-700 font-medium">HIPAA</span>}
+                                        {m.scores?.['comp-soc2'] === 10 && <span className="text-xs bg-indigo-100 px-2 py-0.5 rounded text-indigo-700 font-medium">SOC 2</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* User Rights */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                User Rights
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Available Rights</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['right-delete'] === 10 && <span className="text-xs bg-rose-100 px-2 py-0.5 rounded text-rose-700">Delete</span>}
+                                        {m.scores?.['right-access'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">Access</span>}
+                                        {m.scores?.['right-retention'] === 10 && <span className="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-700">Retention</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Transparency */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Transparency
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Transparency Features</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['trans-subproc'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">Subprocessors</span>}
+                                        {m.scores?.['trans-sharing'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700">No Ad Sharing</span>}
+                                        {m.scores?.['trans-notify'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">Policy Notices</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Data Residency */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Data Location
+                            </td>
                         </tr>
                         <tr>
                             <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Data Residency</td>
                             {selectedModels.map(m => (
-                                <td key={m.id} className="p-4 text-center border-r border-slate-200">
+                                <td key={m.id} className="p-4 border-r border-slate-200">
                                     <div className="flex flex-wrap justify-center gap-1">
-                                        {/* @ts-ignore */}
-                                        {m.privacyFeatures?.dataResidency?.map((r: string) => (
-                                            <span key={r} className="text-xs bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">{r}</span>
-                                        ))}
+                                        {m.scores?.['residency-us'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">US</span>}
+                                        {m.scores?.['residency-eu'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700">EU</span>}
+                                        {m.scores?.['residency-specific'] === 10 && <span className="text-xs bg-purple-100 px-2 py-0.5 rounded text-purple-700">Specific Regions</span>}
+                                        {m.scores?.['residency-global'] === 10 && <span className="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">Global</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Incident Response */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Incident Response
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Response Capabilities</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['incident-breach'] === 10 && <span className="text-xs bg-rose-100 px-2 py-0.5 rounded text-rose-700">Breach Notification</span>}
+                                        {m.scores?.['incident-reports'] === 10 && <span className="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-700">Reports</span>}
+                                        {m.scores?.['incident-sla'] === 10 && <span className="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-700">SLA</span>}
+                                    </div>
+                                </td>
+                            ))}
+                            {selectedModelIds.length < 4 && <td />}
+                        </tr>
+
+                        {/* Data Portability */}
+                        <tr className="bg-slate-50/50">
+                            <td colSpan={selectedModels.length + 2} className="p-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider sticky left-0">
+                                Data Portability
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 text-sm font-medium text-slate-700 border-r border-slate-200 sticky left-0 bg-white">Export Capabilities</td>
+                            {selectedModels.map(m => (
+                                <td key={m.id} className="p-4 border-r border-slate-200">
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                        {m.scores?.['portability-self'] === 10 && <span className="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-700">Self-service</span>}
+                                        {m.scores?.['portability-api'] === 10 && <span className="text-xs bg-indigo-100 px-2 py-0.5 rounded text-indigo-700">API</span>}
+                                        {m.scores?.['portability-request'] === 10 && <span className="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-700">On Request</span>}
                                     </div>
                                 </td>
                             ))}

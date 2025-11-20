@@ -113,17 +113,17 @@
         {
           "id": "comp-gdpr",
           "label": "GDPR",
-          "description": "GDPR Compliant"
+          "description": "General Data Protection Regulation (GDPR)"
         },
         {
           "id": "comp-ccpa",
           "label": "CCPA",
-          "description": "CCPA Compliant"
+          "description": "California Consumer Privacy Act (CCPA)"
         },
         {
           "id": "comp-hipaa",
           "label": "HIPAA",
-          "description": "HIPAA Compliant"
+          "description": "Health Insurance Portability and Accountability Act (HIPAA)"
         },
         {
           "id": "comp-soc2",
@@ -178,8 +178,8 @@
         },
         {
           "id": "trans-sharing",
-          "label": "No Ad Sharing",
-          "description": "Data not shared for advertising"
+          "label": "No Sharing for Analytics",
+          "description": "Data not shared for analytics"
         },
         {
           "id": "trans-notify",
@@ -211,7 +211,7 @@
         },
         {
           "id": "residency-specific",
-          "label": "Specific Regions",
+          "label": "Other Regions",
           "description": "Choose where data is stored"
         },
         {

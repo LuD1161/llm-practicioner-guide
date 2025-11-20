@@ -257,7 +257,7 @@ export default function ComparisonTable({ results, questions, userAnswers }: Com
             body: tableBody,
             theme: 'grid',
             headStyles: { fillColor: [15, 23, 42] as [number, number, number], textColor: 255 },
-            styles: { fontSize: 9, cellPadding: 3 },
+            styles: { fontSize: 9, cellPadding: 3, minCellHeight: 10 },
             columnStyles: {
                 0: { fontStyle: 'bold', cellWidth: 40 }
             },
@@ -268,30 +268,30 @@ export default function ComparisonTable({ results, questions, userAnswers }: Com
                     const tags = tagData[key];
 
                     if (tags && tags.length > 0) {
-                        let xOffset = data.cell.x + 2;
-                        let yOffset = data.cell.y + data.cell.height / 2 + 1;
-
-                        // Calculate if we need multiple lines
                         const cellWidth = data.cell.width - 4;
-                        let currentLineWidth = 0;
-                        let lineNumber = 0;
+                        const startX = data.cell.x + 2;
+                        const startY = data.cell.y + 4;
 
-                        tags.forEach((tag) => {
+                        let xOffset = startX;
+                        let yOffset = startY;
+                        let currentLineWidth = 0;
+
+                        tags.forEach((tag, tagIndex) => {
                             const colors = badgeColors[tag] || { bg: [241, 245, 249], text: [51, 65, 85] };
                             doc.setFontSize(7);
-                            const badgeWidth = doc.getTextWidth(tag) + 4 + 2; // padding + gap
+                            const badgeWidth = doc.getTextWidth(tag) + 4;
 
                             // Check if we need to wrap to next line
                             if (currentLineWidth + badgeWidth > cellWidth && currentLineWidth > 0) {
-                                lineNumber++;
                                 currentLineWidth = 0;
-                                xOffset = data.cell.x + 2;
-                                yOffset += 5;
+                                xOffset = startX;
+                                yOffset += 6;  // Move to next line
                             }
 
+                            // Draw the badge
                             const width = drawBadge(doc, tag, xOffset, yOffset, colors);
-                            xOffset += width + 2;
-                            currentLineWidth += badgeWidth;
+                            xOffset += width + 2;  // Add gap between badges
+                            currentLineWidth += badgeWidth + 2;
                         });
 
                         // Reset text color

@@ -107,7 +107,7 @@ export default function ComparisonTable({ results, questions, userAnswers }: Com
         const tableHead = [['Feature', ...selectedModels.map(m => m.name)]];
 
         // Store tag data separately for rendering
-        const tagData: Record<string, string[][]> = {};
+        const tagData: Record<string, string[]> = {};
         let rowIndex = 0;
 
         const tableBody = [

@@ -36,130 +36,221 @@ export default function ComparisonTable({ results, questions, userAnswers }: Com
     };
 
     const handleExport = async () => {
-        // Dynamically import jspdf to avoid SSR issues if any, and keep bundle size optimized
         const jsPDF = (await import('jspdf')).default;
         const autoTable = (await import('jspdf-autotable')).default;
 
         const doc = new jsPDF();
 
+        // Color mapping for badges (RGB values matching tailwind colors)
+        const badgeColors: Record<string, { bg: [number, number, number], text: [number, number, number] }> = {
+            'No Training': { bg: [209, 250, 229], text: [4, 120, 87] },      // emerald
+            'Opt-out': { bg: [219, 234, 254], text: [29, 78, 216] },         // blue
+            'Anonymized': { bg: [254, 243, 199], text: [180, 83, 9] },       // amber
+            'Allowed': { bg: [241, 245, 249], text: [51, 65, 85] },          // slate
+            'PII': { bg: [241, 245, 249], text: [51, 65, 85] },              // slate
+            'Sensitive': { bg: [255, 228, 230], text: [190, 18, 60] },       // rose
+            'Minors': { bg: [243, 232, 255], text: [107, 33, 168] },         // purple
+            'General': { bg: [209, 250, 229], text: [4, 120, 87] },          // emerald
+            'Encryption': { bg: [241, 245, 249], text: [51, 65, 85] },       // slate
+            'SSO': { bg: [219, 234, 254], text: [29, 78, 216] },             // blue
+            'MFA': { bg: [224, 231, 255], text: [67, 56, 202] },             // indigo
+            'Audit Logs': { bg: [237, 233, 254], text: [109, 40, 217] },     // violet
+            'DLP': { bg: [252, 231, 243], text: [190, 24, 93] },             // pink
+            'GDPR': { bg: [209, 250, 229], text: [4, 120, 87] },             // emerald
+            'CCPA': { bg: [219, 234, 254], text: [29, 78, 216] },            // blue
+            'HIPAA': { bg: [255, 228, 230], text: [190, 18, 60] },           // rose
+            'SOC 2': { bg: [224, 231, 255], text: [67, 56, 202] },           // indigo
+            'Delete': { bg: [255, 228, 230], text: [190, 18, 60] },          // rose
+            'Access': { bg: [219, 234, 254], text: [29, 78, 216] },          // blue
+            'Retention': { bg: [254, 243, 199], text: [180, 83, 9] },        // amber
+            'Subprocessors': { bg: [241, 245, 249], text: [51, 65, 85] },    // slate
+            'No Ad Sharing': { bg: [209, 250, 229], text: [4, 120, 87] },    // emerald
+            'Policy Notices': { bg: [219, 234, 254], text: [29, 78, 216] },  // blue
+            'US': { bg: [219, 234, 254], text: [29, 78, 216] },              // blue
+            'EU': { bg: [209, 250, 229], text: [4, 120, 87] },               // emerald
+            'Specific Regions': { bg: [243, 232, 255], text: [107, 33, 168] }, // purple
+            'Global': { bg: [241, 245, 249], text: [51, 65, 85] },           // slate
+            'Breach Notification': { bg: [255, 228, 230], text: [190, 18, 60] }, // rose
+            'Reports': { bg: [254, 243, 199], text: [180, 83, 9] },          // amber
+            'SLA': { bg: [219, 234, 254], text: [29, 78, 216] },             // blue
+            'Self-service': { bg: [209, 250, 229], text: [4, 120, 87] },     // emerald
+            'API': { bg: [224, 231, 255], text: [67, 56, 202] },             // indigo
+            'On Request': { bg: [254, 243, 199], text: [180, 83, 9] },       // amber
+        };
+
+        // Helper function to draw a badge
+        const drawBadge = (doc: any, text: string, x: number, y: number, colors: { bg: [number, number, number], text: [number, number, number] }) => {
+            const padding = 2;
+            const height = 4;
+            doc.setFontSize(7);
+            const width = doc.getTextWidth(text) + (padding * 2);
+
+            // Draw rounded rectangle background
+            doc.setFillColor(...colors.bg);
+            doc.roundedRect(x, y - height + 0.5, width, height, 0.5, 0.5, 'F');
+
+            // Draw text
+            doc.setTextColor(...colors.text);
+            doc.text(text, x + padding, y);
+
+            return width;
+        };
+
         // PAGE 1: Comparison Table
-        // Add Title
         doc.setFontSize(20);
         doc.text("LLM Selection Guide - Comparison Report", 14, 22);
 
         doc.setFontSize(10);
         doc.text(`Generated on ${new Date().toLocaleDateString()}`, 14, 30);
 
-        // Prepare table data with colored cells
+        // Build the table with tag data
         const tableHead = [['Feature', ...selectedModels.map(m => m.name)]];
+
+        // Store tag data separately for rendering
+        const tagData: Record<string, string[][]> = {};
+        let rowIndex = 0;
 
         const tableBody = [
             // Training Policy
             [{ content: 'TRAINING POLICY', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['Model Training', ...selectedModels.map(m => {
+            ['Model Training', ...selectedModels.map((m, colIndex) => {
                 const tags = [];
                 if (m.scores?.['train-none'] === 10) tags.push('No Training');
                 if (m.scores?.['train-opt-out'] === 10) tags.push('Opt-out');
                 if (m.scores?.['train-anon'] === 10) tags.push('Anonymized');
                 if (m.scores?.['train-allow'] === 10) tags.push('Allowed');
-                return tags.join(', ') || '-';
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-'; // Placeholder, we'll draw badges in didDrawCell
             })],
+        ];
+        rowIndex += 2;
 
-            // Data Support
+        // Data Support
+        tableBody.push(
             [{ content: 'DATA SUPPORT', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['Supported Data Types', ...selectedModels.map(m => {
+            ['Supported Data Types', ...selectedModels.map((m, colIndex) => {
                 const tags = [];
                 if (m.scores?.['data-pii'] === 10) tags.push('PII');
                 if (m.scores?.['data-sensitive'] === 10) tags.push('Sensitive');
                 if (m.scores?.['data-minors'] === 10) tags.push('Minors');
                 if (m.scores?.['data-general'] === 10) tags.push('General');
-                return tags.join(', ') || '-';
-            })],
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
 
-            // Security
+        // Security
+        tableBody.push(
             [{ content: 'SECURITY FEATURES', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['Available Features', ...selectedModels.map(m => {
+            ['Available Features', ...selectedModels.map((m, colIndex) => {
                 const tags = [];
                 if (m.scores?.['sec-enc'] === 10) tags.push('Encryption');
                 if (m.scores?.['sec-sso'] === 10) tags.push('SSO');
                 if (m.scores?.['sec-mfa'] === 10) tags.push('MFA');
                 if (m.scores?.['sec-audit'] === 10) tags.push('Audit Logs');
                 if (m.scores?.['sec-dlp'] === 10) tags.push('DLP');
-                return tags.join(', ') || '-';
-            })],
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
 
-            // Compliance
+        // Compliance
+        tableBody.push(
             [{ content: 'COMPLIANCE & CERTIFICATIONS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['Certifications', ...selectedModels.map(m => {
+            ['Certifications', ...selectedModels.map((m, colIndex) => {
                 const tags = [];
                 if (m.scores?.['comp-gdpr'] === 10) tags.push('GDPR');
                 if (m.scores?.['comp-ccpa'] === 10) tags.push('CCPA');
                 if (m.scores?.['comp-hipaa'] === 10) tags.push('HIPAA');
                 if (m.scores?.['comp-soc2'] === 10) tags.push('SOC 2');
-                return tags.join(', ') || '-';
-            })],
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
 
-            // User Rights
+        // User Rights
+        tableBody.push(
             [{ content: 'USER RIGHTS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['Available Rights', ...selectedModels.map(m => {
+            ['Available Rights', ...selectedModels.map((m, colIndex) => {
                 const tags = [];
                 if (m.scores?.['right-delete'] === 10) tags.push('Delete');
                 if (m.scores?.['right-access'] === 10) tags.push('Access');
                 if (m.scores?.['right-retention'] === 10) tags.push('Retention');
-                return tags.join(', ') || '-';
-            })],
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
 
-            // Transparency
+        // Transparency
+        tableBody.push(
             [{ content: 'TRANSPARENCY', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['Transparency Features', ...selectedModels.map(m => {
+            ['Transparency Features', ...selectedModels.map((m, colIndex) => {
                 const tags = [];
                 if (m.scores?.['trans-subproc'] === 10) tags.push('Subprocessors');
                 if (m.scores?.['trans-sharing'] === 10) tags.push('No Ad Sharing');
                 if (m.scores?.['trans-notify'] === 10) tags.push('Policy Notices');
-                return tags.join(', ') || '-';
-            })],
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
 
-            // Data Residency
+        // Data Residency
+        tableBody.push(
             [{ content: 'DATA LOCATION', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['Data Residency', ...selectedModels.map(m => {
+            ['Data Residency', ...selectedModels.map((m, colIndex) => {
                 const tags = [];
                 if (m.scores?.['residency-us'] === 10) tags.push('US');
                 if (m.scores?.['residency-eu'] === 10) tags.push('EU');
                 if (m.scores?.['residency-specific'] === 10) tags.push('Specific Regions');
                 if (m.scores?.['residency-global'] === 10) tags.push('Global');
-                return tags.join(', ') || '-';
-            })],
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
 
-            // Incident Response
+        // Incident Response
+        tableBody.push(
             [{ content: 'INCIDENT RESPONSE', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['Response Capabilities', ...selectedModels.map(m => {
+            ['Response Capabilities', ...selectedModels.map((m, colIndex) => {
                 const tags = [];
                 if (m.scores?.['incident-breach'] === 10) tags.push('Breach Notification');
-                if (m.scores?.[' incident-reports'] === 10) tags.push('Reports');
+                if (m.scores?.['incident-reports'] === 10) tags.push('Reports');
                 if (m.scores?.['incident-sla'] === 10) tags.push('SLA');
-                return tags.join(', ') || '-';
-            })],
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
 
-            // Data Portability
+        // Data Portability
+        tableBody.push(
             [{ content: 'DATA PORTABILITY', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
-            ['Export Capabilities', ...selectedModels.map(m => {
+            ['Export Capabilities', ...selectedModels.map((m, colIndex) => {
                 const tags = [];
                 if (m.scores?.['portability-self'] === 10) tags.push('Self-service');
                 if (m.scores?.['portability-api'] === 10) tags.push('API');
                 if (m.scores?.['portability-request'] === 10) tags.push('On Request');
-                return tags.join(', ') || '-';
-            })],
+                tagData[`${rowIndex + 1}-${colIndex + 1}`] = tags;
+                return tags.length > 0 ? ' ' : '-';
+            })]
+        );
+        rowIndex += 2;
 
-            // Strengths Section
+        // Strengths and Documentation (no badges needed)
+        tableBody.push(
             [{ content: 'KEY STRENGTHS', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
             ['Highlights', ...selectedModels.map(m => m.strengths.join('\n• '))],
-
-            // Policy Section
             [{ content: 'DOCUMENTATION', colSpan: selectedModels.length + 1, styles: { fillColor: [241, 245, 249] as [number, number, number], fontStyle: 'bold' as const } }],
             ['Policy References', ...selectedModels.map(m => m.policyReferences?.map(r => r.feature).join('\n') || 'None')]
-        ];
+        );
 
-        // Generate table
+        // Generate table with custom cell rendering for badges
         autoTable(doc, {
             startY: 40,
             head: tableHead,
@@ -169,6 +260,44 @@ export default function ComparisonTable({ results, questions, userAnswers }: Com
             styles: { fontSize: 9, cellPadding: 3 },
             columnStyles: {
                 0: { fontStyle: 'bold', cellWidth: 40 }
+            },
+            didDrawCell: (data) => {
+                // Draw badges for data cells (not header or label cells)
+                if (data.section === 'body' && data.column.index > 0) {
+                    const key = `${data.row.index}-${data.column.index}`;
+                    const tags = tagData[key];
+
+                    if (tags && tags.length > 0) {
+                        let xOffset = data.cell.x + 2;
+                        let yOffset = data.cell.y + data.cell.height / 2 + 1;
+
+                        // Calculate if we need multiple lines
+                        const cellWidth = data.cell.width - 4;
+                        let currentLineWidth = 0;
+                        let lineNumber = 0;
+
+                        tags.forEach((tag) => {
+                            const colors = badgeColors[tag] || { bg: [241, 245, 249], text: [51, 65, 85] };
+                            doc.setFontSize(7);
+                            const badgeWidth = doc.getTextWidth(tag) + 4 + 2; // padding + gap
+
+                            // Check if we need to wrap to next line
+                            if (currentLineWidth + badgeWidth > cellWidth && currentLineWidth > 0) {
+                                lineNumber++;
+                                currentLineWidth = 0;
+                                xOffset = data.cell.x + 2;
+                                yOffset += 5;
+                            }
+
+                            const width = drawBadge(doc, tag, xOffset, yOffset, colors);
+                            xOffset += width + 2;
+                            currentLineWidth += badgeWidth;
+                        });
+
+                        // Reset text color
+                        doc.setTextColor(0, 0, 0);
+                    }
+                }
             }
         });
 

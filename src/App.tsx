@@ -92,8 +92,8 @@ function App() {
             Get Started
           </button>
 
-          <div className="mt-16 pt-8 border-t border-slate-200">
-            <p className="text-sm text-slate-500">
+          <div className="mt-12 text-center text-sm text-slate-500">
+            <p>
               Developed by CMU Privacy Engineering
             </p>
           </div>

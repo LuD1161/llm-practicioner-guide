@@ -23,7 +23,7 @@ export default function QuizSidebar({
   const percentage = (answeredCount / totalQuestions) * 100;
 
   return (
-    <div className={`relative bg-white border-r border-slate-200 overflow-hidden transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-80'}`}>
+    <div className={`relative bg-white border-r border-slate-200 overflow-x-hidden transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-80'}`}>
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className="absolute top-4 right-2 z-10 w-8 h-8 bg-slate-100 border border-slate-300 rounded-lg flex items-center justify-center hover:bg-slate-200 transition-colors shadow-sm"

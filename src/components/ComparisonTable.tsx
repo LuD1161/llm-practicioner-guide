@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { ScoredLLM } from '../utils/scoring';
 import { Plus, X, Check, Download, FileText, Info } from 'lucide-react';
 import PolicyModal from './PolicyModal';
+import { Question, UserAnswers } from '../types/quiz';
 
 interface ComparisonTableProps {
     results: ScoredLLM[];
+    questions?: Question[];
+    userAnswers?: UserAnswers;
 }
 
-export default function ComparisonTable({ results }: ComparisonTableProps) {
+export default function ComparisonTable({ results, questions, userAnswers }: ComparisonTableProps) {
     // Initialize with top 3 models
     const [selectedModelIds, setSelectedModelIds] = useState<string[]>(() =>
         results.slice(0, 3).map(r => r.id)
@@ -39,6 +42,7 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
 
         const doc = new jsPDF();
 
+        // PAGE 1: Comparison Table
         // Add Title
         doc.setFontSize(20);
         doc.text("LLM Selection Guide - Comparison Report", 14, 22);
@@ -46,7 +50,7 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
         doc.setFontSize(10);
         doc.text(`Generated on ${new Date().toLocaleDateString()}`, 14, 30);
 
-        // Prepare table data
+        // Prepare table data with colored cells
         const tableHead = [['Feature', ...selectedModels.map(m => m.name)]];
 
         const tableBody = [
@@ -131,7 +135,7 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
             ['Response Capabilities', ...selectedModels.map(m => {
                 const tags = [];
                 if (m.scores?.['incident-breach'] === 10) tags.push('Breach Notification');
-                if (m.scores?.['incident-reports'] === 10) tags.push('Reports');
+                if (m.scores?.[' incident-reports'] === 10) tags.push('Reports');
                 if (m.scores?.['incident-sla'] === 10) tags.push('SLA');
                 return tags.join(', ') || '-';
             })],
@@ -167,6 +171,50 @@ export default function ComparisonTable({ results }: ComparisonTableProps) {
                 0: { fontStyle: 'bold', cellWidth: 40 }
             }
         });
+
+        // PAGE 2: Questions and Answers
+        if (questions && userAnswers) {
+            doc.addPage();
+            doc.setFontSize(16);
+            doc.text("Quiz Questions & Your Answers", 14, 20);
+
+            let yPosition = 30;
+
+            questions.forEach((question, index) => {
+                // Check if we need a new page
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+
+                // Question
+                doc.setFontSize(11);
+                doc.setFont('', 'bold');
+                doc.text(`Q${index + 1}: ${question.question}`, 14, yPosition);
+                yPosition += 7;
+
+                // Selected answer(s)
+                const answer = userAnswers[question.id];
+                if (answer) {
+                    doc.setFont('', 'normal');
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 100, 0);
+
+                    const answerIds = Array.isArray(answer) ? answer : [answer];
+                    answerIds.forEach(answerId => {
+                        const option = question.options.find(o => o.id === answerId);
+                        if (option) {
+                            doc.text(`✓ ${option.label}`, 20, yPosition);
+                            yPosition += 6;
+                        }
+                    });
+
+                    doc.setTextColor(0, 0, 0);
+                }
+
+                yPosition += 5;
+            });
+        }
 
         doc.save('llm-comparison-report.pdf');
     };

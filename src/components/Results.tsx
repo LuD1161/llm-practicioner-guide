@@ -55,6 +55,8 @@ export default function Results({
         <div className="lg:col-span-9 h-full overflow-hidden flex flex-col">
           <ComparisonTable
             results={results}
+            questions={allQuestions}
+            userAnswers={userAnswers}
           />
         </div>
       </div>

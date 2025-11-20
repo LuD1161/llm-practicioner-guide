@@ -134,6 +134,7 @@ function App() {
         currentQuestionIndex={currentQuestionIndex}
         userAnswers={userAnswers}
         onQuestionClick={setCurrentQuestionIndex}
+        onRestart={handleRestart}
       />
 
       <div className="flex-1 py-8 px-4 overflow-y-auto flex flex-col">

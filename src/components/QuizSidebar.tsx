@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle2, Circle, ChevronLeft } from 'lucide-react';
+import { CheckCircle2, Circle, ChevronLeft, RotateCcw } from 'lucide-react';
 import { Question, UserAnswers } from '../types/quiz';
 
 interface QuizSidebarProps {
@@ -7,6 +7,7 @@ interface QuizSidebarProps {
   currentQuestionIndex: number;
   userAnswers: UserAnswers;
   onQuestionClick: (index: number) => void;
+  onRestart?: () => void;
 }
 
 export default function QuizSidebar({
@@ -14,6 +15,7 @@ export default function QuizSidebar({
   currentQuestionIndex,
   userAnswers,
   onQuestionClick,
+  onRestart,
 }: QuizSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const answeredCount = Object.keys(userAnswers).length;
@@ -24,17 +26,17 @@ export default function QuizSidebar({
     <div className={`relative bg-white border-r border-slate-200 overflow-hidden transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-80'}`}>
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute top-4 -right-3 z-10 w-6 h-6 bg-white border border-slate-200 rounded-full flex items-center justify-center hover:bg-slate-50 transition-colors shadow-sm"
+        className="absolute top-4 right-2 z-10 w-8 h-8 bg-slate-100 border border-slate-300 rounded-lg flex items-center justify-center hover:bg-slate-200 transition-colors shadow-sm"
         aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
         <ChevronLeft
-          size={14}
-          className={`text-slate-600 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}
+          size={16}
+          className={`text-slate-700 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}
         />
       </button>
 
       {!isCollapsed && (
-        <div className="p-6 overflow-y-auto h-full">
+        <div className="p-6 overflow-y-auto h-full flex flex-col">
           <div className="mb-8">
             <h3 className="text-sm font-semibold text-slate-900 mb-2">Progress</h3>
             <div className="flex items-center justify-between mb-2">
@@ -126,6 +128,18 @@ export default function QuizSidebar({
               })}
             </div>
           </div>
+
+          {onRestart && (
+            <div className="mt-auto pt-6 border-t border-slate-200">
+              <button
+                onClick={onRestart}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors text-sm font-medium"
+              >
+                <RotateCcw size={16} />
+                Reset Progress
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

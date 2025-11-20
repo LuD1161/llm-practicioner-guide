@@ -36,7 +36,7 @@ export default function QuizSidebar({
       </button>
 
       {!isCollapsed && (
-        <div className="p-6 overflow-y-auto h-full flex flex-col">
+        <div className="p-6 overflow-y-auto overflow-x-hidden h-full flex flex-col">
           <div className="mb-8">
             <h3 className="text-sm font-semibold text-slate-900 mb-2">Progress</h3>
             <div className="flex items-center justify-between mb-2">

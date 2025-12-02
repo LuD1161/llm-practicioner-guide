@@ -45,15 +45,53 @@ This tool provides a guided quiz to assess your organization's privacy and secur
 
 ### Decision Tree & Scoring Logic
 
-The matching algorithm uses a weighted scoring system:
+The matching algorithm uses a weighted scoring system implemented in `src/utils/scoring.ts`:
 
-1. **Question-based scoring**: Each quiz question maps to specific LLM capabilities
-2. **Binary scoring**: LLMs receive 10 points if they support a feature, 0 if they don't
-3. **"Not Important" handling**: When marked "Not Important," all LLMs receive full points for that category
-4. **Match percentage calculation**: 
+#### How Match Percentage is Calculated
+
+For each LLM provider, the algorithm:
+
+1. **Initializes counters**:
+   - `totalScore = 0` (actual points earned by the LLM)
+   - `maxPossibleScore = 0` (maximum points achievable based on user's selections)
+
+2. **Processes each user answer**:
+
+   **For multi-select questions** (when user selects multiple options):
+   - If "Not Important" is selected → LLM receives full 10 points, max increases by 10
+   - Otherwise, for each selected option:
+     - Adds the LLM's predefined score for that option (from `llm.scores[optionId]`)
+     - Adds 10 to maxPossibleScore (one per selected option)
+
+   **For single-select questions**:
+   - If "Not Important" is selected → LLM receives full 10 points, max increases by 10
+   - Otherwise:
+     - Adds the LLM's predefined score for that option
+     - Adds 10 to maxPossibleScore
+
+3. **Calculates final match percentage**:
    ```
-   Match % = (Total Score / Maximum Possible Score) × 100
+   Match % = (totalScore / maxPossibleScore) × 100
    ```
+
+4. **Sorts results**: LLMs are ranked by match percentage (highest first)
+
+#### Scoring Example
+
+If a user answers 5 single-select questions:
+- **maxPossibleScore** = 50 (5 questions × 10 points each)
+- **totalScore** = sum of the LLM's scores for all selected options
+- Example: If an LLM scores [10, 8, 10, 7, 5] for the selected options:
+  - totalScore = 40
+  - **matchPercentage = (40/50) × 100 = 80%**
+
+#### Key Insights
+
+- Each LLM has **predefined scores (0-10)** for every option in the quiz data
+- A score of **10 means full support**, **0 means no support**
+- Partial scores (1-9) represent varying levels of support
+- The match percentage shows **how well an LLM aligns with your specific requirements**
+- "Not Important" selections ensure those criteria don't penalize any LLM
 
 ### Data Collection & Verification
 

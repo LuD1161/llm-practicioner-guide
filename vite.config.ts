@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/llm-practicioner-guide/',
+  base: process.env.NODE_ENV === 'production' ? '/llm-practicioner-guide/' : '/',
   optimizeDeps: {
     exclude: ['lucide-react'],
   },

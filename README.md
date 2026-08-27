@@ -236,9 +236,12 @@ llm-practicioner-guide/
 ## 📊 Supported LLM Providers
 
 Currently includes:
-- **OpenAI API** (GPT-4, GPT-3.5)
-- **Google Gemini API** (Gemini Pro, Gemini Ultra)
-- **Anthropic Claude API** (Claude 3 Opus, Claude 3 Sonnet, Claude 3 Haiku)
+- **OpenAI API**
+- **Google Gemini API**
+- **Anthropic Claude API**
+- **DeepSeek**
+- **Moonshot**
+- **Qwen**
 
 ## 🤝 Contributing
 

@@ -3,6 +3,7 @@ import { LLM, UserAnswers } from '../types/quiz';
 export interface ScoredLLM extends LLM {
   totalScore: number;
   matchPercentage: number;
+  unverifiedOptions: string[];
 }
 
 export function calculateLLMScores(
@@ -14,6 +15,7 @@ export function calculateLLMScores(
   const scoredLLMs = llms.map((llm) => {
     let totalScore = 0;
     let maxPossibleScore = 0;
+    const unverifiedOptions: string[] = [];
 
     answerValues.forEach((answer) => {
       if (Array.isArray(answer)) {
@@ -27,7 +29,8 @@ export function calculateLLMScores(
         } else {
           // Normal scoring for selected options
           answer.forEach((answerId) => {
-            const score = llm.scores[answerId] || 0;
+            const score = llm.scores[answerId] ?? 0;
+            if (llm.scores[answerId] == null) unverifiedOptions.push(answerId);
             totalScore += score;
             maxPossibleScore += 10;
           });
@@ -39,7 +42,8 @@ export function calculateLLMScores(
           totalScore += 10;
           maxPossibleScore += 10;
         } else {
-          const score = llm.scores[answer] || 0;
+          const score = llm.scores[answer] ?? 0;
+          if (llm.scores[answer] == null) unverifiedOptions.push(answer);
           totalScore += score;
           maxPossibleScore += 10;
         }
@@ -54,6 +58,7 @@ export function calculateLLMScores(
       ...llm,
       totalScore,
       matchPercentage,
+      unverifiedOptions,
     };
   });
 

@@ -2,7 +2,7 @@ import * as Icons from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 
 interface OptionCardProps {
-  icon: string;
+  icon?: string;
   label: string;
   description: string;
   selected: boolean;
@@ -12,11 +12,12 @@ interface OptionCardProps {
   isFocused?: boolean;
 }
 
-export default function OptionCard({ icon, label, description, selected, onClick, onKeyDown, tabIndex, isFocused }: OptionCardProps) {
+export default function OptionCard({ icon = 'Circle', label, description, selected, onClick, onKeyDown, tabIndex, isFocused }: OptionCardProps) {
   const IconComponent = (Icons[icon as keyof typeof Icons] as LucideIcon) || Icons.Circle;
 
   return (
     <button
+      aria-pressed={selected}
       onClick={onClick}
       onKeyDown={onKeyDown}
       tabIndex={tabIndex}

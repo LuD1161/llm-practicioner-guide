@@ -59,9 +59,9 @@ export default function PolicyModal({ isOpen, onClose, llmName, policyReferences
 
                 {/* Excerpt */}
                 <div className="mb-4">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Policy Excerpt</span>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{ref.summary ? 'Policy Summary' : 'Policy Excerpt'}</span>
                   <blockquote className="mt-2 pl-4 border-l-4 border-slate-300 text-slate-700 text-sm italic leading-relaxed">
-                    "{ref.excerpt}"
+                    {ref.summary ? ref.excerpt : `"${ref.excerpt}"`}
                   </blockquote>
                 </div>
 

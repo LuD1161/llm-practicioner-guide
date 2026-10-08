@@ -1,6 +1,6 @@
 import { RotateCcw } from 'lucide-react';
 import { ScoredLLM } from '../utils/scoring';
-import { LLM, Question, UserAnswers } from '../types/quiz';
+import { Question, UserAnswers } from '../types/quiz';
 import ComparisonTable from './ComparisonTable';
 import QuestionConfigurator from './QuestionConfigurator';
 
@@ -8,9 +8,8 @@ interface ResultsProps {
   results: ScoredLLM[];
   onRestart: () => void;
   userAnswers: UserAnswers;
-  onUpdateAnswer: (questionId: number, value: string | string[]) => void;
+  onUpdateAnswer: (questionId: string, value: string | string[]) => void;
   allQuestions: Question[];
-  allLLMs: LLM[];
 }
 
 export default function Results({
@@ -18,12 +17,11 @@ export default function Results({
   onRestart,
   userAnswers,
   onUpdateAnswer,
-  allQuestions,
-  allLLMs
+  allQuestions
 }: ResultsProps) {
   return (
-    <div className="w-full max-w-7xl mx-auto animate-fade-in h-full flex flex-col">
-      <div className="flex justify-between items-center mb-8 shrink-0">
+    <div className="w-full max-w-7xl mx-auto animate-fade-in min-h-0 lg:h-full flex flex-col">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8 shrink-0">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">
             Analysis & Recommendations
@@ -43,7 +41,7 @@ export default function Results({
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
         {/* Left Sidebar - Configuration */}
-        <div className="lg:col-span-3 h-full overflow-hidden">
+        <div className="lg:col-span-3 h-96 lg:h-full overflow-hidden">
           <QuestionConfigurator
             questions={allQuestions}
             userAnswers={userAnswers}
@@ -52,7 +50,7 @@ export default function Results({
         </div>
 
         {/* Main Content - Comparison Table */}
-        <div className="lg:col-span-9 h-full overflow-hidden flex flex-col">
+        <div className="lg:col-span-9 min-h-[32rem] lg:min-h-0 lg:h-full overflow-hidden flex flex-col">
           <ComparisonTable
             results={results}
             questions={allQuestions}

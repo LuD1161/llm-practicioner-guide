@@ -5,15 +5,19 @@ import QuizSidebar from './components/QuizSidebar';
 import Results from './components/Results';
 import quizData from './data/quiz-data.json';
 import { QuizData, UserAnswers } from './types/quiz';
+import { firstUnansweredQuestion, isAnswered, restoreAnswers } from './utils/answers';
 import { calculateLLMScores } from './utils/scoring';
 
-const data = quizData as QuizData;
+const data: QuizData = quizData;
 
 function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>(() => {
-    const saved = localStorage.getItem('llm-quiz-answers');
-    return saved ? JSON.parse(saved) : {};
+    try {
+      return restoreAnswers(localStorage.getItem('llm-quiz-answers'), data.questions);
+    } catch {
+      return {};
+    }
   });
   const [showResults, setShowResults] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
@@ -26,10 +30,14 @@ function App() {
   }, [userAnswers]);
 
   useEffect(() => {
-    localStorage.setItem('llm-quiz-answers', JSON.stringify(userAnswers));
+    try {
+      localStorage.setItem('llm-quiz-answers', JSON.stringify(userAnswers));
+    } catch {
+      // Continue the quiz when browser storage is unavailable.
+    }
   }, [userAnswers]);
 
-  const handleSelectOption = (optionId: string | string[], questionId?: number) => {
+  const handleSelectOption = (optionId: string | string[], questionId?: string) => {
     const qId = questionId ?? currentQuestion.id;
     const newAnswers = {
       ...userAnswers,
@@ -39,10 +47,16 @@ function App() {
   };
 
   const handleNext = () => {
+    if (!isAnswered(currentQuestion, userAnswers)) return;
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      setShowResults(true);
+      const unansweredIndex = firstUnansweredQuestion(data.questions, userAnswers);
+      if (unansweredIndex !== -1) {
+        setCurrentQuestionIndex(unansweredIndex);
+      } else {
+        setShowResults(true);
+      }
     }
   };
 
@@ -57,12 +71,15 @@ function App() {
     setUserAnswers({});
     setShowResults(false);
     setIsStarted(false);
-    localStorage.removeItem('llm-quiz-answers');
+    try {
+      localStorage.removeItem('llm-quiz-answers');
+    } catch {
+      // In-memory answers have already been reset.
+    }
   };
 
   const currentAnswer = userAnswers[currentQuestion?.id];
-  const canProceed = currentAnswer !== undefined &&
-    (Array.isArray(currentAnswer) ? currentAnswer.length > 0 : true);
+  const canProceed = isAnswered(currentQuestion, userAnswers);
 
   if (!isStarted) {
     return (
@@ -70,7 +87,7 @@ function App() {
         <div className="max-w-2xl w-full text-center animate-fade-in">
           <div className="mb-8">
             <img
-              src="/cmu-logo.png"
+              src={`${import.meta.env.BASE_URL}cmu-logo.png`}
               alt="Carnegie Mellon University"
               className="h-20 mx-auto"
             />
@@ -106,14 +123,13 @@ function App() {
     return (
       <div className="h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col overflow-hidden">
         <div className="flex-1 overflow-hidden w-full">
-          <div className="h-full py-8 px-4 overflow-hidden">
+          <div className="h-full py-8 px-4 overflow-y-auto lg:overflow-hidden">
             <Results
               results={results}
               onRestart={handleRestart}
               userAnswers={userAnswers}
               onUpdateAnswer={(qId, val) => handleSelectOption(val, qId)}
               allQuestions={data.questions}
-              allLLMs={data.llms}
             />
           </div>
         </div>

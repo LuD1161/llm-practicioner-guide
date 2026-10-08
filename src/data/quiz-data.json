@@ -9,27 +9,32 @@
         {
           "id": "train-none",
           "label": "Strictly No Training",
-          "description": "Provider must not train on my data"
+          "description": "Provider must not train on my data",
+          "icon": "Brain"
         },
         {
           "id": "train-opt-out",
           "label": "Opt-out Available",
-          "description": "Training allowed only if opt-out is possible"
+          "description": "Training allowed only if opt-out is possible",
+          "icon": "Brain"
         },
         {
           "id": "train-anon",
           "label": "Anonymized Only",
-          "description": "Training on de-identified/aggregated data is okay"
+          "description": "Training on de-identified/aggregated data is okay",
+          "icon": "Brain"
         },
         {
           "id": "train-allow",
           "label": "Training Allowed",
-          "description": "No restrictions on training"
+          "description": "No restrictions on training",
+          "icon": "Brain"
         },
         {
           "id": "train-notimportant",
           "label": "Not Important",
-          "description": "Training policy doesn't matter to me"
+          "description": "Training policy doesn't matter to me",
+          "icon": "Minus"
         }
       ]
     },
@@ -42,27 +47,32 @@
         {
           "id": "data-pii",
           "label": "PII / Personal Data",
-          "description": "Names, emails, or other identifiers"
+          "description": "Names, emails, or other identifiers",
+          "icon": "Database"
         },
         {
           "id": "data-sensitive",
           "label": "Sensitive / Regulated",
-          "description": "Health, Financial, or High-risk data"
+          "description": "Health, Financial, or High-risk data",
+          "icon": "Database"
         },
         {
           "id": "data-minors",
           "label": "Minors / Children",
-          "description": "Data related to individuals under 18"
+          "description": "Data related to individuals under 18",
+          "icon": "Database"
         },
         {
           "id": "data-general",
           "label": "General / Public",
-          "description": "Non-sensitive, public information"
+          "description": "Non-sensitive, public information",
+          "icon": "Database"
         },
         {
           "id": "data-notimportant",
           "label": "Not Important",
-          "description": "Data type doesn't matter to me"
+          "description": "Data type doesn't matter to me",
+          "icon": "Minus"
         }
       ]
     },
@@ -75,32 +85,38 @@
         {
           "id": "sec-enc",
           "label": "Encryption (Transit & Rest)",
-          "description": "Full encryption coverage"
+          "description": "Full encryption coverage",
+          "icon": "Shield"
         },
         {
           "id": "sec-sso",
           "label": "SSO / Corporate Login",
-          "description": "Integration with identity providers"
+          "description": "Integration with identity providers",
+          "icon": "Shield"
         },
         {
           "id": "sec-mfa",
           "label": "MFA",
-          "description": "Multi-factor authentication"
+          "description": "Multi-factor authentication",
+          "icon": "Shield"
         },
         {
           "id": "sec-audit",
           "label": "Audit Logs",
-          "description": "Detailed access logs"
+          "description": "Detailed access logs",
+          "icon": "Shield"
         },
         {
           "id": "sec-dlp",
           "label": "Data Leak Protection",
-          "description": "Prevention of sensitive data exfiltration"
+          "description": "Prevention of sensitive data exfiltration",
+          "icon": "Shield"
         },
         {
           "id": "sec-notimportant",
           "label": "Not Important",
-          "description": "Security features don't matter to me"
+          "description": "Security features don't matter to me",
+          "icon": "Minus"
         }
       ]
     },
@@ -113,27 +129,32 @@
         {
           "id": "comp-gdpr",
           "label": "GDPR",
-          "description": "General Data Protection Regulation (GDPR)"
+          "description": "General Data Protection Regulation (GDPR)",
+          "icon": "BadgeCheck"
         },
         {
           "id": "comp-ccpa",
           "label": "CCPA",
-          "description": "California Consumer Privacy Act (CCPA)"
+          "description": "California Consumer Privacy Act (CCPA)",
+          "icon": "BadgeCheck"
         },
         {
           "id": "comp-hipaa",
           "label": "HIPAA",
-          "description": "Health Insurance Portability and Accountability Act (HIPAA)"
+          "description": "Health Insurance Portability and Accountability Act (HIPAA)",
+          "icon": "BadgeCheck"
         },
         {
           "id": "comp-soc2",
           "label": "SOC 2",
-          "description": "SOC 2 Certified"
+          "description": "SOC 2 Certified",
+          "icon": "BadgeCheck"
         },
         {
           "id": "comp-notimportant",
           "label": "Not Important",
-          "description": "Compliance certifications don't matter to me"
+          "description": "Compliance certifications don't matter to me",
+          "icon": "Minus"
         }
       ]
     },
@@ -146,22 +167,26 @@
         {
           "id": "right-delete",
           "label": "Right to Delete",
-          "description": "Ability to request data deletion"
+          "description": "Ability to request data deletion",
+          "icon": "UserCheck"
         },
         {
           "id": "right-access",
           "label": "Right to Access/Correct",
-          "description": "Ability to view and fix data"
+          "description": "Ability to view and fix data",
+          "icon": "UserCheck"
         },
         {
           "id": "right-retention",
           "label": "Custom Retention",
-          "description": "Control over how long data is kept"
+          "description": "Control over how long data is kept",
+          "icon": "UserCheck"
         },
         {
           "id": "right-notimportant",
           "label": "Not Important",
-          "description": "User rights don't matter to me"
+          "description": "User rights don't matter to me",
+          "icon": "Minus"
         }
       ]
     },
@@ -174,22 +199,26 @@
         {
           "id": "trans-subproc",
           "label": "Subprocessor Disclosure",
-          "description": "List of third-party vendors"
+          "description": "List of third-party vendors",
+          "icon": "Eye"
         },
         {
           "id": "trans-sharing",
           "label": "No Sharing for Analytics",
-          "description": "Data not shared for analytics"
+          "description": "Data not shared for analytics",
+          "icon": "Eye"
         },
         {
           "id": "trans-notify",
           "label": "Policy Change Notice",
-          "description": "Proactive notification of changes"
+          "description": "Proactive notification of changes",
+          "icon": "Eye"
         },
         {
           "id": "trans-notimportant",
           "label": "Not Important",
-          "description": "Transparency features don't matter to me"
+          "description": "Transparency features don't matter to me",
+          "icon": "Minus"
         }
       ]
     },
@@ -202,27 +231,32 @@
         {
           "id": "residency-us",
           "label": "US Only",
-          "description": "Data must stay in United States"
+          "description": "Data must stay in United States",
+          "icon": "Globe"
         },
         {
           "id": "residency-eu",
           "label": "EU Only",
-          "description": "Data must stay in European Union"
+          "description": "Data must stay in European Union",
+          "icon": "Globe"
         },
         {
           "id": "residency-specific",
           "label": "Other Regions",
-          "description": "Choose where data is stored"
+          "description": "Choose where data is stored",
+          "icon": "Globe"
         },
         {
           "id": "residency-global",
           "label": "Global / Any",
-          "description": "Data can be stored anywhere"
+          "description": "Data can be stored anywhere",
+          "icon": "Globe"
         },
         {
           "id": "residency-notimportant",
           "label": "Not Important",
-          "description": "Data location doesn't matter to me"
+          "description": "Data location doesn't matter to me",
+          "icon": "Minus"
         }
       ]
     },
@@ -235,22 +269,26 @@
         {
           "id": "incident-breach",
           "label": "Breach Notification",
-          "description": "Timely notification of security incidents"
+          "description": "Timely notification of security incidents",
+          "icon": "Bell"
         },
         {
           "id": "incident-reports",
           "label": "Incident Reports",
-          "description": "Regular security status updates"
+          "description": "Regular security status updates",
+          "icon": "Bell"
         },
         {
           "id": "incident-sla",
           "label": "SLA Guarantees",
-          "description": "Uptime and response time commitments"
+          "description": "Uptime and response time commitments",
+          "icon": "Bell"
         },
         {
           "id": "incident-notimportant",
           "label": "Not Important",
-          "description": "Incident response doesn't matter to me"
+          "description": "Incident response doesn't matter to me",
+          "icon": "Minus"
         }
       ]
     },
@@ -263,22 +301,26 @@
         {
           "id": "portability-self",
           "label": "Self-service Export",
-          "description": "Download your data anytime"
+          "description": "Download your data anytime",
+          "icon": "Download"
         },
         {
           "id": "portability-api",
           "label": "API Export",
-          "description": "Programmatic data export"
+          "description": "Programmatic data export",
+          "icon": "Download"
         },
         {
           "id": "portability-request",
           "label": "On Request",
-          "description": "Must request data export"
+          "description": "Must request data export",
+          "icon": "Download"
         },
         {
           "id": "portability-notimportant",
           "label": "Not Important",
-          "description": "Data portability doesn't matter to me"
+          "description": "Data portability doesn't matter to me",
+          "icon": "Minus"
         }
       ]
     }
@@ -302,7 +344,9 @@
         "hipaaCompliant": false,
         "soc2": true,
         "dataResidency": [
-          "US"
+          "US",
+          "Europe (EEA + Switzerland)",
+          "Other supported regions"
         ],
         "zeroRetention": "30 days",
         "auditLogs": false,
@@ -336,6 +380,22 @@
           "excerpt": "OpenAI maintains SOC 2 Type 2 compliance for the API service.",
           "url": "https://trust.openai.com",
           "lastVerified": "14 Nov 2025 (latest)"
+        },
+        {
+          "feature": "Data Residency",
+          "source": "OpenAI API data controls",
+          "excerpt": "Eligible projects can select regional storage for customer content. Europe covers the EEA and Switzerland, so it is a partial match for an EU-only requirement. System data is excluded; eligibility, endpoint and retention restrictions apply.",
+          "url": "https://platform.openai.com/docs/guides/your-data",
+          "lastVerified": "2026-10-07",
+          "summary": true
+        },
+        {
+          "feature": "Breach Notification",
+          "source": "OpenAI Data Processing Addendum, section 2.7",
+          "excerpt": "The DPA provides for notifying customers without undue delay after awareness of a personal data breach and assistance with their legal obligations.",
+          "url": "https://openai.com/policies/data-processing-addendum/",
+          "lastVerified": "2026-10-07",
+          "summary": true
         }
       ],
       "scores": {
@@ -361,19 +421,27 @@
         "train-allow": 0,
         "comp-hipaa": 0,
         "right-retention": 0,
-        "trans-notify": 0
+        "trans-notify": 0,
+        "residency-us": 10,
+        "residency-eu": 5,
+        "residency-specific": 10,
+        "residency-global": 10,
+        "incident-breach": 10,
+        "incident-reports": null,
+        "incident-sla": null,
+        "portability-self": null,
+        "portability-api": null,
+        "portability-request": null
       }
     },
     {
       "id": "google-gemini",
       "name": "Google Gemini API",
       "provider": "Google",
-      "description": "Google's multimodal AI with enterprise features and Google Cloud compliance",
+      "description": "Gemini Developer API; Google Cloud Vertex AI has separate terms and controls",
       "strengths": [
         "Multimodal capabilities",
-        "Google Cloud compliance",
-        "Enterprise features",
-        "Data residency options"
+        "Paid API data-use protections"
       ],
       "privacyFeatures": {
         "noTraining": true,
@@ -382,9 +450,7 @@
         "hipaaCompliant": true,
         "soc2": true,
         "dataResidency": [
-          "US",
-          "EU",
-          "Asia"
+          "Global"
         ],
         "zeroRetention": "Configurable",
         "auditLogs": true,
@@ -411,6 +477,14 @@
           "excerpt": "Google Cloud (including Gemini API via Vertex AI) maintains compliance certifications including SOC 2, ISO 27001, GDPR, and HIPAA (via BAA).",
           "url": "https://cloud.google.com/security/compliance",
           "lastVerified": "14 Nov 2025 (latest)"
+        },
+        {
+          "feature": "Data Residency",
+          "source": "Gemini API Additional Terms, Paid Services",
+          "excerpt": "Paid Developer API content may be stored or cached in any country where Google or its agents have facilities. These terms do not establish US-only, EU-only, or selectable regional storage. Vertex AI is a separate offering.",
+          "url": "https://ai.google.dev/gemini-api/terms#paid-services",
+          "lastVerified": "2026-10-07",
+          "summary": true
         }
       ],
       "scores": {
@@ -436,7 +510,17 @@
         "trans-notify": 10,
         "train-none": 0,
         "train-allow": 0,
-        "right-retention": 0
+        "right-retention": 0,
+        "residency-us": 0,
+        "residency-eu": 0,
+        "residency-specific": 0,
+        "residency-global": 10,
+        "incident-breach": null,
+        "incident-reports": null,
+        "incident-sla": null,
+        "portability-self": null,
+        "portability-api": null,
+        "portability-request": null
       }
     },
     {
@@ -491,6 +575,14 @@
           "excerpt": "We comply with GDPR requirements including data processing agreements, right to access, right to deletion, and data portability.",
           "url": "https://www.anthropic.com/legal/privacy",
           "lastVerified": "14 Nov 2025 (latest)"
+        },
+        {
+          "feature": "Breach Notification",
+          "source": "Anthropic Data Processing Addendum, section G.1",
+          "excerpt": "The DPA provides for written notice within 48 hours after awareness of a security breach affecting customer personal data, plus reasonable cooperation with the investigation.",
+          "url": "https://www.anthropic.com/legal/data-processing-addendum",
+          "lastVerified": "2026-10-07",
+          "summary": true
         }
       ],
       "scores": {
@@ -516,7 +608,17 @@
         "sec-dlp": 0,
         "comp-ccpa": 0,
         "comp-hipaa": 0,
-        "trans-sharing": 0
+        "trans-sharing": 0,
+        "residency-us": null,
+        "residency-eu": null,
+        "residency-specific": null,
+        "residency-global": 10,
+        "incident-breach": 10,
+        "incident-reports": null,
+        "incident-sla": null,
+        "portability-self": null,
+        "portability-api": null,
+        "portability-request": null
       }
     },
     {
@@ -550,7 +652,17 @@
         "comp-ccpa": 0,
         "comp-hipaa": 0,
         "comp-soc2": 0,
-        "trans-sharing": 0
+        "trans-sharing": 0,
+        "residency-us": null,
+        "residency-eu": null,
+        "residency-specific": null,
+        "residency-global": 10,
+        "incident-breach": null,
+        "incident-reports": null,
+        "incident-sla": null,
+        "portability-self": null,
+        "portability-api": null,
+        "portability-request": null
       }
     },
     {
@@ -584,7 +696,17 @@
         "comp-ccpa": 0,
         "comp-hipaa": 0,
         "comp-soc2": 0,
-        "trans-sharing": 0
+        "trans-sharing": 0,
+        "residency-us": null,
+        "residency-eu": null,
+        "residency-specific": null,
+        "residency-global": 10,
+        "incident-breach": null,
+        "incident-reports": null,
+        "incident-sla": null,
+        "portability-self": null,
+        "portability-api": null,
+        "portability-request": null
       }
     },
     {
@@ -618,7 +740,17 @@
         "comp-hipaa": 0,
         "comp-soc2": 0,
         "right-retention": 0,
-        "trans-sharing": 0
+        "trans-sharing": 0,
+        "residency-us": null,
+        "residency-eu": null,
+        "residency-specific": null,
+        "residency-global": 10,
+        "incident-breach": null,
+        "incident-reports": null,
+        "incident-sla": null,
+        "portability-self": null,
+        "portability-api": null,
+        "portability-request": null
       }
     }
   ]

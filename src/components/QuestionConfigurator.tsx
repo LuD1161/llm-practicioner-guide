@@ -5,7 +5,7 @@ import { Check, ChevronDown } from 'lucide-react';
 interface QuestionConfiguratorProps {
     questions: Question[];
     userAnswers: UserAnswers;
-    onUpdateAnswer: (questionId: number, value: string | string[]) => void;
+    onUpdateAnswer: (questionId: string, value: string | string[]) => void;
 }
 
 export default function QuestionConfigurator({

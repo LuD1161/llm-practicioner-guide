@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CheckCircle2, Circle, ChevronLeft, RotateCcw } from 'lucide-react';
+import { isAnswered as hasAnswer } from '../utils/answers';
 import { Question, UserAnswers } from '../types/quiz';
 
 interface QuizSidebarProps {
@@ -17,13 +18,13 @@ export default function QuizSidebar({
   onQuestionClick,
   onRestart,
 }: QuizSidebarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const answeredCount = Object.keys(userAnswers).length;
+  const [isCollapsed, setIsCollapsed] = useState(() => window.matchMedia('(max-width: 767px)').matches);
+  const answeredCount = questions.filter(question => hasAnswer(question, userAnswers)).length;
   const totalQuestions = questions.length;
   const percentage = (answeredCount / totalQuestions) * 100;
 
   return (
-    <div className={`relative bg-white border-r border-slate-200 overflow-x-hidden transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-80'}`}>
+    <div className={`relative shrink-0 bg-white border-r border-slate-200 overflow-x-hidden transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-80'}`}>
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className="absolute top-4 right-2 z-10 w-8 h-8 bg-slate-100 border border-slate-300 rounded-lg flex items-center justify-center hover:bg-slate-200 transition-colors shadow-sm"
@@ -59,7 +60,7 @@ export default function QuizSidebar({
             <h3 className="text-sm font-semibold text-slate-900 mb-3">Questions</h3>
             <div className="space-y-2">
               {questions.map((question, index) => {
-                const isAnswered = userAnswers[question.id] !== undefined;
+                const isAnswered = hasAnswer(question, userAnswers);
                 const isCurrent = index === currentQuestionIndex;
 
                 return (

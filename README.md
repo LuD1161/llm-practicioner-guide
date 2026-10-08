@@ -28,11 +28,11 @@ This tool provides a guided quiz to assess your organization's privacy and secur
 - **Color-coded badges**: Visual indicators for supported features
 - **Categorized features**: Training policy, data support, security, compliance, user rights, transparency, data location, incident response, and data portability
 - **Policy references**: Direct links to official privacy policies and terms of service
-- **Verification dates**: All information verified as of November 14, 2025
+- **Verification dates**: Per-source dates; new residency and breach-notification evidence checked October 7, 2026
 
 ### Professional PDF Export
-- **Page 1: Comparison Report**: Full comparison table with color-coded badges
-- **Page 2: Your Requirements**: Summary of quiz questions and selected answers
+- **Comparison Report**: Full comparison table with color-coded badges
+- **Following pages: Your Requirements**: Summary of quiz questions and selected answers
 - **Print-ready**: Professional formatting for stakeholder presentations
 
 ### Modern UI/UX
@@ -87,7 +87,9 @@ If a user answers 5 single-select questions:
 
 #### Key Insights
 
-- Each LLM has **predefined scores (0-10)** for every option in the quiz data
+- Each LLM has a **score (0-10) or an explicit `null`** for every requirement. `null` means unverified, earns no match points, and is shown separately from confirmed lack of support.
+- **Global / Any** earns full points for all providers because it imposes no location restriction.
+- The Gemini entry covers the **Developer API**; Vertex AI has separate terms and residency controls.
 - A score of **10 means full support**, **0 means no support**
 - Partial scores (1-9) represent varying levels of support
 - The match percentage shows **how well an LLM aligns with your specific requirements**
@@ -98,7 +100,7 @@ If a user answers 5 single-select questions:
 All LLM data is sourced from official documentation:
 - **Primary sources**: Privacy policies, Terms of Service, API documentation
 - **Verification**: Cross-referenced with provider security pages and compliance certifications
-- **Last verified**: November 14, 2025
+- **Verification dates**: Legacy entries are dated November 14, 2025; selected residency and breach-notification entries were checked October 7, 2026. This is not a complete refresh of all provider policies.
 - **Update cycle**: Quarterly reviews to ensure accuracy
 
 ### Feature Categories
@@ -158,7 +160,7 @@ All LLM data is sourced from official documentation:
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 20.19+ or 22.12+ and npm
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 
 ### Installation
@@ -199,6 +201,9 @@ npm run typecheck
 
 # Linting
 npm run lint
+
+# Regression tests
+npm test
 ```
 
 ## 📁 Project Structure

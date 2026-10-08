@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Question } from '../types/quiz';
 import OptionCard from './OptionCard';
 import { Info } from 'lucide-react';
@@ -12,8 +12,10 @@ interface QuizQuestionProps {
 export default function QuizQuestion({ question, selectedOptions, onSelectOption }: QuizQuestionProps) {
   const [focusedIndex, setFocusedIndex] = useState(0);
 
+  const optionsRef = useRef<HTMLDivElement>(null);
+
   const isMultiple = question.multipleSelect;
-  const selectedArray = Array.isArray(selectedOptions) ? selectedOptions : selectedOptions ? [selectedOptions] : [];
+  const selectedArray = useMemo(() => Array.isArray(selectedOptions) ? selectedOptions : selectedOptions ? [selectedOptions] : [], [selectedOptions]);
 
   const isSelected = useCallback((optionId: string) => {
     return selectedArray.includes(optionId);
@@ -59,25 +61,27 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
     }
   }, [isMultiple, isSelected, selectedArray, onSelectOption]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent, optionId: string, index: number) => {
+  const focusOption = useCallback((index: number) => {
+    setFocusedIndex(index);
+    optionsRef.current?.querySelector<HTMLButtonElement>(`[data-option-index="${index}"] button`)?.focus();
+  }, []);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, optionId: string) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleSelect(optionId);
     } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
-      setFocusedIndex((prev) => (prev + 1) % question.options.length);
+      focusOption((focusedIndex + 1) % question.options.length);
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault();
-      setFocusedIndex((prev) => (prev - 1 + question.options.length) % question.options.length);
+      focusOption((focusedIndex - 1 + question.options.length) % question.options.length);
     }
-  }, [question.options.length, handleSelect]);
+  }, [question.options.length, handleSelect, focusedIndex, focusOption]);
 
   useEffect(() => {
-    const focusedButton = document.querySelector(`[data-option-index="${focusedIndex}"]`) as HTMLElement;
-    if (focusedButton) {
-      focusedButton.focus();
-    }
-  }, [focusedIndex]);
+    setFocusedIndex(0);
+  }, [question.id]);
 
   return (
     <div className="w-full max-w-4xl mx-auto animate-fade-in">
@@ -96,16 +100,16 @@ export default function QuizQuestion({ question, selectedOptions, onSelectOption
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div ref={optionsRef} className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {question.options.map((option, index) => (
-          <div key={option.id} data-option-index={index}>
+          <div key={option.id} data-option-index={index} onFocus={() => setFocusedIndex(index)}>
             <OptionCard
               icon={option.icon}
               label={option.label}
               description={option.description}
               selected={isSelected(option.id)}
               onClick={() => handleSelect(option.id)}
-              onKeyDown={(e) => handleKeyDown(e, option.id, index)}
+              onKeyDown={(e) => handleKeyDown(e, option.id)}
               tabIndex={index === focusedIndex ? 0 : -1}
               isFocused={index === focusedIndex}
             />
